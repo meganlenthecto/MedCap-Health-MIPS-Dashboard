@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedCap Health – MIPS Quality Dashboard 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --teal:      #4ca9a0;
+    --teal-dark: #335c67;
+    --gold:      #e6b75a;
+    --charcoal:  #36424a;
+    --papyrus:   #ede3cf;
+    --light-blue:#bfd3d8;
+    --bg:        #f4f1eb;
+    --card:      #ffffff;
+    --green:     #2d8a5e;
+    --yellow:    #c8860a;
+    --red:       #b83232;
+    --border:    #ddd6c8;
+    --text:      #36424a;
+    --text2:     #5a6a74;
+    --radius:    10px;
+    --shadow:    0 2px 8px rgba(51,92,103,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Montserrat', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 20px; }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+    border-radius: var(--radius);
+    padding: 0;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .header-logo-wrap {
+    background: rgba(0,0,0,0.18);
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .header-logo-wrap img { height: 70px; width: auto; }
+  .header-body {
+    flex: 1;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-title h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+  .header-title .sub { font-size: 11px; color: var(--light-blue); margin-top: 3px; letter-spacing: 0.3px; }
+  .header-title .tagline { font-size: 11px; color: var(--gold); font-style: italic; margin-top: 2px; }
+  .filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .filters label { font-size: 11px; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 0.5px; }
+  .filters select {
+    padding: 7px 12px; border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px; background: rgba(255,255,255,0.12);
+    color: #fff; font-size: 12px; font-family: 'Montserrat', sans-serif; cursor: pointer;
+  }
+  .filters select option { background: var(--teal-dark); color: #fff; }
+
+  /* ── ALERT ── */
+  .alert-bar {
+    background: #fff8ec; border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    border-radius: var(--radius); padding: 10px 16px;
+    margin-bottom: 16px; font-size: 12px; color: #7a5a10;
+    display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 0; margin-bottom: 18px;
+    background: var(--card); border-radius: var(--radius);
+    padding: 4px; box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 9px 18px; font-size: 12px; font-weight: 600;
+    border: none; background: none; cursor: pointer;
+    color: var(--text2); border-radius: 7px;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.18s; white-space: nowrap; letter-spacing: 0.2px;
+  }
+  .tab-btn:hover { background: var(--papyrus); color: var(--teal-dark); }
+  .tab-btn.active { background: var(--teal); color: #fff; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── KPI ROW ── */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .kpi {
+    background: var(--card); border-radius: var(--radius);
+    padding: 18px 20px; box-shadow: var(--shadow);
+    border-top: 4px solid var(--teal);
+    position: relative; overflow: hidden;
+  }
+  .kpi::after {
+    content: ''; position: absolute; bottom: -20px; right: -20px;
+    width: 70px; height: 70px; border-radius: 50%;
+    background: var(--papyrus); opacity: 0.5;
+  }
+  .kpi.kpi-green { border-top-color: var(--green); }
+  .kpi.kpi-yellow { border-top-color: var(--gold); }
+  .kpi.kpi-red { border-top-color: var(--red); }
+  .kpi.kpi-teal { border-top-color: var(--teal); }
+  .kpi.kpi-blue { border-top-color: var(--teal-dark); }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); margin-bottom: 6px; font-weight: 600; }
+  .kpi-val { font-size: 30px; font-weight: 800; line-height: 1; color: var(--charcoal); }
+  .kpi-val.cv-green { color: var(--green); }
+  .kpi-val.cv-yellow { color: var(--yellow); }
+  .kpi-val.cv-red { color: var(--red); }
+  .kpi-val.cv-teal { color: var(--teal-dark); }
+  .kpi-sub { font-size: 10px; color: var(--text2); margin-top: 5px; line-height: 1.4; }
+
+  /* ── SECTION LABEL ── */
+  .sec-head {
+    font-size: 10px; font-weight: 700; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 0.7px;
+    margin-bottom: 12px; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-head::before {
+    content: ''; display: block; width: 18px; height: 3px;
+    background: var(--gold); border-radius: 2px;
+  }
+
+  /* ── ENTITY GRID ── */
+  .entity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 16px; margin-bottom: 18px; }
+  .entity-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 20px; box-shadow: var(--shadow);
+    border-top: 3px solid var(--teal);
+  }
+  .entity-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .entity-name { font-size: 14px; font-weight: 700; color: var(--teal-dark); }
+  .entity-tin { font-size: 10px; color: var(--text2); margin-top: 2px; letter-spacing: 0.3px; }
+
+  .total-badge {
+    text-align: center; padding: 8px 14px; border-radius: 8px;
+    line-height: 1.1; min-width: 80px;
+  }
+  .total-badge .badge-num { font-size: 24px; font-weight: 800; }
+  .total-badge .badge-denom { font-size: 13px; font-weight: 500; opacity: 0.75; }
+  .total-badge .badge-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; opacity: 0.85; }
+  .badge-excellent { background: #d2f0e6; color: #1a5c3a; border: 1px solid #a8dfc4; }
+  .badge-good      { background: #d5eaf5; color: #1a4a6e; border: 1px solid #a8cfe0; }
+  .badge-warn      { background: #fef3d8; color: #7a5210; border: 1px solid #f0d48a; }
+  .badge-danger    { background: #fde8e8; color: #8a1e1e; border: 1px solid #f0b0b0; }
+
+  .measure-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .measure-table th {
+    text-align: left; padding: 5px 7px; border-bottom: 2px solid var(--papyrus);
+    color: var(--text2); font-size: 9px; text-transform: uppercase;
+    letter-spacing: 0.5px; font-weight: 700; white-space: nowrap;
+  }
+  .measure-table td { padding: 7px 7px; border-bottom: 1px solid #f0ebe0; vertical-align: middle; }
+  .measure-table tr:last-child td { border-bottom: none; }
+  .measure-table tr:hover td { background: #faf8f3; }
+  .m-code {
+    font-weight: 700; font-size: 10px; padding: 2px 7px;
+    border-radius: 4px; background: var(--papyrus);
+    color: var(--teal-dark); letter-spacing: 0.3px;
+  }
+  .bar-wrap { background: #eee8da; border-radius: 3px; height: 5px; width: 72px; margin-top: 3px; }
+  .bar-fill { height: 5px; border-radius: 3px; }
+  .bar-g { background: var(--green); }
+  .bar-y { background: var(--gold); }
+  .bar-r { background: var(--red); }
+  .d-pill {
+    display: inline-block; min-width: 26px; text-align: center;
+    padding: 2px 7px; border-radius: 10px; font-weight: 700; font-size: 11px;
+  }
+  .d10 { background: #c8f0e0; color: #155c36; }
+  .d78 { background: #c8e6f5; color: #0d3d6e; }
+  .d56 { background: #d5edf5; color: #0a5070; }
+  .d34 { background: #fef0c0; color: #7a5200; }
+  .d12 { background: #fde0d0; color: #8a2d00; }
+  .d0  { background: #fcd0d0; color: #7a1010; font-style: italic; }
+  .flag-warn { font-size: 9px; background: #fde8e8; color: #8a1e1e; padding: 1px 5px; border-radius: 3px; font-weight: 600; }
+  .flag-ok   { font-size: 9px; background: #d2f0e6; color: #1a5c3a; padding: 1px 5px; border-radius: 3px; font-weight: 600; }
+  .flag-na   { font-size: 9px; color: #aaa; }
+
+  /* ── CHARTS ── */
+  .chart-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+  .chart-card  {
+    background: var(--card); border-radius: var(--radius);
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .chart-card h3 { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .chart-card canvas { max-height: 260px; }
+
+  /* ── DETAIL TABLE ── */
+  .table-wrap { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px; overflow-x: auto; }
+  .table-wrap h3 { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .dtable { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dtable thead th {
+    padding: 9px 10px; border-bottom: 2px solid var(--papyrus);
+    color: var(--text2); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.5px; text-align: right; cursor: pointer;
+    white-space: nowrap; user-select: none; font-weight: 700;
+  }
+  .dtable thead th:first-child, .dtable thead th:nth-child(2) { text-align: left; }
+  .dtable thead th:hover { color: var(--teal); }
+  .dtable tbody td { padding: 8px 10px; border-bottom: 1px solid #f0ebe0; text-align: right; }
+  .dtable tbody td:first-child, .dtable tbody td:nth-child(2) { text-align: left; }
+  .dtable tbody tr:hover td { background: #faf8f3; }
+
+  /* ── COMPARE ── */
+  .compare-section { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .compare-section h3 { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .compare-section p { font-size: 11px; color: var(--text2); margin-bottom: 14px; }
+  .ctable { width: 100%; border-collapse: collapse; font-size: 11px; overflow-x: auto; }
+  .ctable th { padding: 7px 9px; border-bottom: 2px solid var(--papyrus); color: var(--text2); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; font-weight: 700; }
+  .ctable th:first-child, .ctable th:nth-child(2) { text-align: left; }
+  .ctable td { padding: 7px 9px; border-bottom: 1px solid #f0ebe0; text-align: center; }
+  .ctable td:first-child { text-align: left; font-weight: 600; font-size: 11px; }
+  .ctable td:nth-child(2) { text-align: left; }
+  .ctable tr:hover td { background: #faf8f3; }
+  .up   { color: var(--green); font-weight: 700; }
+  .down { color: var(--red); font-weight: 700; }
+  .same { color: var(--text2); }
+
+  /* ── GOLD DIVIDER ── */
+  .gold-rule { border: none; border-top: 2px solid var(--gold); opacity: 0.4; margin: 4px 0 16px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; font-size: 10px; color: var(--text2);
+    padding: 16px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    letter-spacing: 0.3px;
+  }
+  .footer img { height: 24px; opacity: 0.6; }
+
+  @media (max-width: 900px) {
+    .chart-row { grid-template-columns: 1fr; }
+    .entity-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .header { flex-direction: column; }
+  }
+  @media print {
+    body { background: white; }
+    .filters, .tabs { display: none; }
+    .tab-content { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo-wrap">
+      <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAEjAPMDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAYHBQgCAwQJAf/EAFcQAAEDAwEEBQUGEAwDCQAAAAEAAgMEBREGBxIhMRNBUWFxCCKBkaEXMjdWcrEUFRYjJDQ1QlJzdJSys9HSGCUzVGJ1gpKi0+HwNlOTOENVV7TBwsPE/8QAGQEBAAMBAQAAAAAAAAAAAAAAAAECAwQF/8QAMxEAAgIBAwEFBwMDBQAAAAAAAAECEQMEEjEhBRNBUZEUIjJhcYGhscHRFUJSNILh8PH/2gAMAwEAAhEDEQA/ANMkREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAERfrQS4ADJPJAbMbPvJy07qPRFmv1VfrrDNX0kc7442x7rS4ZwMtzhZ3+CxpX4yXn+7F+6rn0Fa32TRFks8v8pRUEED/AJTYwD7QVm1ttRwvLK+TX3+CxpX4yXn+7F+6n8FjSvxkvP8Adi/dWwSJtRHez8zX3+CxpX4yXn+7F+6tUrnTtpLlVUrHFzYZnxgnmQHEL6XPIawk9XFfNW+nN8rz21Mn6RVJpI3wTcm7PEiIqHQEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBS7Y3p1+qdplis4AMb6pss+eXRR+e/wBbWkeJCiK2m8i3RjoKCv1vWRtzVZpKHI47jT9cd4FwDf7LlMVbKZJbYtmyQ5IiLc88IiIDz3J+5QzOzjzCPXwXzbvn3arvymT9Ir6Nahk3aRseeL3D1D/YXzlvn3arvymT9IqmThG+mfvM8aIiyOwIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiLP6E0jfNaaghsthpHTzvOXvORHCzre93U0e3kMnggbo9+ybQ9w1/rCmstGHMpwRJWVGOEEIPnHxPIDrJ7Mrf2x2yjs1npLVb4RDSUkTYYYx961owFGtkmz+07PdMMtVv+u1MmJKyrcMOnkxz7mjjhvV4kkzJbRjRw5cm99OAiIrGQRF01kwp6Z8p+9HAdp6kI4MJfZulrNwcoxu+nr/AN9y+el8+7Vd+UyfpFb+vJc4uccknJK0Cvn3brvymT9IqMypI00TuUmeNERYHoBERAEREAREQBERAEREAREQBERAEREAReq0UM90utJbKXd6ernZBFvHA3nuDRk9QyVcVN5Mu0SUgSVFjgB631Tzj+6wqUmyspKPJSa/QCTgcVs7p7yVY8Nff9WPJ++ioqYD1Pef/irg0Psl0JpB7J7XY4ZKxg4VdUemlz2gu4NPyQFZQZnLPFcGrmyrYRqzWEkVbc4ZLHZzuu6eojxLM0/8uM8eX3xwOORnktudn+itP6HsjbVYKIQsODNK7jLO4D3z3dZ9g6gFJAAOSK6ikc08sphERWMwiIgCwN9qulmEDD5sZ497v9FkLtWCmh3WH66/3vd3qOq8V4mOWXgCtA7592678pk/SK38K06u2y3V8t1q5WUlOWvne5v2Q3kXFVyxcqpGmlzQxt73RXiKc+5VrH+Z0/5w39qe5VrH+Z0/5w39qx7ufkdntmD/ADXqQZFOfcp1j/M6f84b+1c4dkutppBHDb4ZHnk1s7SU7ufkT7Xg/wA16kDRWdTbB9ptQfMsIaO187GfOQsjD5Oe02QgOobdH8qtb/7ZUbWaLLB8MqBFnddaWumjNST6fvPQfRkDWOf0L99uHNDhxwOohYJVNE7CIiAIiIAiIgCIiAIiIDPbOfhB05/WtL+uavo0OQXzl2c/CDpz+taX9c1fRocgtYcHLqeUERFc5giIgCIiALz11VHSwl7+Lj71vaVxr62KkZ53nPPvWdZ/0UeqZ5KiUySuyTy7B3BWjGzOc9vRHGeV88rpZDlzlwRFocwCr+f+Wk+UfnVgBRiy6cr7xUvfG3oaYPOZnjhz5AdZV4NLqzk1MJT2qKMI0Fzg1oJJ4AAcSpHZ9HXWuDZJwKOEjOZBl5/s/twpzY9P220NBp4d+brmfxefDs9CyyrLN5GuHs9LrkZHLbo2zUm66aN9XIOuV3m5+SOHrys/T08FOzcp4Y4W9jGho9i7EWLk3yd8MUIfCqCIig0NHfKw+G+7/iab9QxVSrW8rD4b7v8Aiab9QxVSsJcnoY/hQREUFwiIgCIiAIiIAiIgM9s5+EHTn9a0v65q+jQ5BfOXZz8IOnP61pf1zV9GhyC1hwcup5QREVzmCLpqqqmpI+kqaiKFvbI8NHtUYu2uaCAFlvifVv8AwiCxg9fE+pWUW+DLJmhj+JkrkeyNjnvcGtaMucTgAd6h2pNawwh1NaMTScQZyPMb8ntPs8VEbzfLldnfZdQejHKJnmsHo6/TlY1bRxVyebn17l0x9Cd2yaWooIZ55HSSvYC5zjkkr0Lx2T7k034sL2KGdEOsUERZiz28ENqZ297Gn5yobo0jFydHC2WwvxNUghvMM7fFZpjWsaGtaGtAwABgBfqLJuzpjFRXQIiKCwREQBERAaO+Vh8N93/E036hiqlWt5WHw33f8TTfqGKqVhLk9DH8KCIiguEREAREQBERAEREBkNNXFto1HbLs+IytoquKoMYOC8MeHYz1Zwtk3+VbRgeZoqc+NxA/wDrWriKVJopKEZcmytT5VdW4/Y+kIYx/TrC4/ohYqu8pi8VQwbTJC3shqgz27mfatf0VlkkjGWkxy5v1ZdE+3MzyGSaxTSPPNz63J9ZYuHu2x/F1/54P3FTSK/f5PMx/pmmf9v5Zcvu2x/F1/54P3E922P4uv8AzwfuKmkTv8nmP6Zpv8fyzevZ/cxedF2m6iHoRU0zZOj3t7dz1ZwMrOqI7GPgr05+QsUzpoXVE7Ymc3Hn2DtW6dqzglFKW1Hss1F08nTSD60w8B+EVn1wgiZDE2Ngw1owFzWbdnTCO1BERQWCIhIHNAF11E8NPE6WeVkUbBlz3uAAHeSqS2t+UNYdMyS2vTDIr5dGHdfIHfY0J6wXDi89zeHf1LWDXGv9W6zqDJqC81FTFvlzKdp3IY/ksHDuzz71VzSNoYZS6s3J1Ltv2a2J0kU2ooayZnAx0LHT5PZvN832qBV/lUaZY8ih01d52g8HSyRxZ9ALlqWipvZusEUS7a9q+LXWvK3UsNC+hZUMiaIXyb5buMa3ngc8ZURRFQ1SpUEREJCIiAIiIAiIgCIiAIiIAiIgCIiAIiIDdrYx8FenPyFisqwU25Cahw85/Bvgq42JRul2Y6ZibzdRsAVsxMbHG1jRhrRgLqb91HjqNzbOSIiqahERAcJ5Y4IXzSvbHGxpc5zjgNA4kk9QWonlBbcqrUU9RprSNU+nsrSY6irZlr6ztAPNsftd18OCzvla7UpHzy6AsNRiNoH01mjd748xAD2Dm71dRB1oWc5eCOrDi/uYREWZ0hERAEREAREQBERAEREAREQBERAEREAREQBERAEREBvV5PUQfs4068j+Tt7CPE8P2qzlXvk7sA2RWCTrdSMHqH+qsJdB5dU2EREJCh+2PWMWhtn9xvp86pa3oqRn4Uz+DPQPfHuaVMFqd5a+pjVaktWloZT0VFCaqoaDw6STg0HvDRn+2ok6RfHHdKjX6tqaisq5quqmfNUTvdJLI85c9xOSSe0ldKIsD0AiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIDf7YAzc2N6Y76Fp9pU6VG7I9r+zmybM9P2m56lip62lomRzRGnmJY4cxkMIPoUq93PZX8bYPzWf/LW6aPPlCV8FkIq393PZX8bYPzWf/LT3c9lfxtg/NZ/8tLRGyXkWQeRXz/283d162valrCfNjrX0zPkxfWx+hn0rbj3c9lfxth/NZ/3FpDqirZX6muldE/fjqayaVrvwg55IPHxVJs3wRabbRjURFmdQREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBEWTvmn71YxAbtbZ6MTgmIyNwHgYzj1hKKuUU0m+rMYiIhYIiyll0/er1DUTWq21FXHTDMzo28GczxPoKJWVlKMVcnSMWiIhYIiIAiIgCIiAIpgzQ8rtmj9a/TFgjY/c+huiOf5QM99nvzyUPUtNcmePLDJe18On9QiLNWTSuo73EJbXZa2qiJwJWRncz8o8PaiV8FpzjBXJ0jCopbPs21xDGXv07VkD8AtefUCSozXUdXQ1L6WtppqadnB0crC1w8QUcWuSsM2PJ8Ek/ozoREUGgREQBERAEREAREQBERAFtZtE03Tar0f9Kd6NtwZD9EUecb280Aeo5DT2ZBWqa2D2xagqdMXnR94pcnomzCVn/MjIjDm+ke3BW2JpJ2eN2nCc82JY3T96vskzX+eKSCZ8M0bo5I3Fr2OGC0jmCOorgrT266fpXyUmt7LiS3XVrTKWg+bIRkOPZvD2g9qqxZyjtdHpabOs+NTX/j8TtpYJaqqipqeMyTTPDI2Dm5xOAB6VtPo6w0el9Dz2KOSN9dHSOnrd05Je9ruPh5pA7mqqNiFlpLfS12vr2AyhtrHCm3sefJjiRnrGQ0d7u5SnY7eqvUMetrvWuPS1G44NzkMbuSbrR3AYC2xKufE8btXJLMpKPwwq/m2+PsigSiFWjsx0dZYdOy641kf4rhP2NTn/viDjJHXk8A3rOc8FjGLk6R7Oo1EcEN0vsvFvyKzhp5589DDJJjnutJwutwLSQ4EEcwVa9ftquFPKINOWK2UFAzgyORhc7/CWgeGPSspY9U6W2lyNsWq7PBQ3WcbtPW0/Def1AE8WnsBJB9Stsi+iZyy1eeC35MXu/J219ik0WZ1np+r0xqKps9YQ50RyyQDAkYeLXDxHtyFMNkGg6O+Q1OotQv6KyUecgu3elLRl2TzDQOfby7VVRbdHTl1WPHi71vp+pXUMM07t2GJ8juxrSSuMkb43lkjHMcOYcMEK37xtip7W80Gi7BQUtHG7AkljIEg7Qxu7j0knwXG37S7HqrdtWvbDRhkvmNrqcEGHPI8cub4g+hW2x4s5vatQlveLp9evp+x3Qf9mGf8f/8ApCppbB63sDdM7CLjao6ltTCydr4ZR98x1Q1zc9+COSpbQ9qbe9X2u1yAmOoqWNkx+BnLvYCpyJ2kZdnZYvHlyeG5v9Cx9m2ibLZtOfVvrbc+hg0SUtM8ZBH3rnN++cepvLHE93h1NtpvtTKYdPU8Fqo2cIyWB8hHVnPmjwA4dq7/ACkr2+a/0enoHltLRQNkfGOA6R3L1NxjxKqVJS2+7EjS6Zape0ahW3wvBL6E4g2r67ik3zeukGc7r6eMg/4VJq3aRprVmlKuk1lZwLjDFmllpRgvf1brjksOeJzkYz4KoUVVkkjrnoMEmmo014roCv1rXPcGtaXE8gAvZYhbjeaQXfpfoAzNFR0Rw4MzxI4FWpW7UNO6ba6h0Npmka2PzBWTtxv468DzneJcD3KIxT5ZfPmyQajjg5N/ZepUc1NUQAGaCWMHkXsIyupW7adttfNP0GpLJb6yhk4PbAwtcB24cXB3hw8V49tmkbVQU1BqvTjWMtdxxvRs961zm7zS0dQIzw6iO9WcFVxZjDVzWRY80Nt8O7RVy5PY5nvmlviFzo/tuH5Y+dbMbUNPWKrudNqXVE4bZ7ZTkOhaTvTSFww3hzHcOZPZlRCG5Nk6rWrTTjFq91/j5fM1ngp55yRDDJJjnuNJwut7XMcWuaWkcwRyVr1u2ispHim0xp+2W+gZwYyRhJPfhhaB4cfFZmw620rtCkZYtYWSmpa6cbkNXGcAv6g13vmHsGSDy7jKhF9EyktXqILfPF7vydtfYo5FJdo2lKnR+pJLZK8ywOb0lNNj38ZJxnvGMFRpUap0zux5I5IqcX0YREUFwrp8pj7T01+Lm+aNUsrp8pj7T01+Lm+aNaR+CR52q/1eD/d+h4tit4pL3Za/Z5fJPserjc6jcTxa7mWjvBG+O8FQaHR92k119SO5isFR0TnYy0N59J8nd87wWEt1ZUW+vgrqSV0VRBIJI3tPFrgcgrYOq1tpxmkPdAhiphf5KQUTY97L2yZzukdgPHP4ICtGpqn4GOoeTSZHLErU/wAS8/v4kJ223qkt9LRaAshDKG2saandx58mMgHvGS497u5ZXyc/+HNV/IZ+hIqaqp5aqplqaiR0k0ry973c3OJyT61cvk5/8Oar+Qz9CRIS3ZLK6zAsGhcPHpfzdqyletbGbQtL/TXRWnrLBfbbaKSCJri2qk3OlLWADHbjLs+K1z61eV0pfdK2QW+otobLebOAySEO852G7rh/aAa4d4wox8NF+0k1PFO6SfPlfBGfcoh+POnP+v8A6rnDstbBMyaLXenmSRuDmObUYII4gjiqznilgmfDNG+ORhLXseCC0jqI6l6LVbq6618VBbqaWpqZThkbBkn9g71W4+R0PDnSt5en0RZ/lHVFvrKyxVNJXUlXP0EkU7oJWvxulpGcHhxc7Cymtj9JvJ5slHSYayt6DpSOvfDpXf4gFTd1oKy13Ge318D4KmB5ZJG4cQf2d/Wrp0rGzaBsUk05FLH9NbZgRscce9JMZ8C0lme1aRe5vzOLPhWnxYetxjLq/rw/sUYi7q2lqaKrkpKyCSCeJ27JHI0tc09hBXfZbXX3i5Q26200lRUyuw1jR7T2DvKwo9lySW5voXFV11RX+TIZKl5kfFuQhx5lrKhrW+oAD0Kudk1VHR7R7HNKQGmqEeT2vBaPaVb+vrNBp7YJUWaGRsjqVsLZnNOcyGZjn+0n0YWvMT3xSNkjcWvYQ5pHMEda2yXFo8ns9RzYcqjxKUvykWJ5RFDLS7RZal4O5WU8UrD4DcI9bfaq5V+1cFDtg0FBNTSww6itww5p4ecRxB/oOwCD1H0qj7zablZq59FdKOalnYcFkjcZ7x2jvHBVyR62uGb9nZk8awy6Sj0aPEiKU6f0Dqa92aqu9HQFtLBGZGulO6ZscxGPvuHo78qiTfB3ZMsMaubpEZgilnnZBBG6SWRwaxjRkuJ4AAdqsej2QXlluZXXy72uyRvGd2pl85vceoHuyvFsDipZdplCKlrHFscrog78MMOPSBk+heXbRPdZdol0ZdHSfW5d2na73oi+83e4jj4kq6SUdzOLNlyz1HcY3t6XfPoZj3MrP/5i6d/6zf31LNp1vituwi2UMdfBcGU88TWVMJyx4y/iDk9uFRlNDNU1EdPTxPlmkcGsYxpLnE8gAOavLaVaqmybBLXa6zdFRBLCJADnDjvkj0ZwrQaadI5dVGcMuFTnfvcUkUdR/bcPyx86u3yo62VsNktzSRE90szh1Fw3QPUHO9apKj+24flj51sht70tU6j09BUW1vTV1uc6UQN4vkjcAHbo6zkA+g9aQTcJUX10449XglPjr+xrUuUbnMe17HFrmnIIPEFfj2uY8se0tc04IIwQVm9FaZuOqb5DbqCF5aXAzS482JnW4nwzgdfJZJNukepOcYRcpPoizdukjrls60neKgA1UjWl7sc9+IOd7WhUsrc8oi7UTJLTpK3YMdsjDpMHO6d0NY3xDRn+0FUavl+I4uy4taZdKu2vpYREWZ6AU62p66p9ZQWuOC3y0hoWvDi+QO397d5YHD3qgqKU2lRlPDCc4zfMbr7hERQahTrZlrqn0jbLxRz2+WqNwa0NcyQN3MNcOORx98oKilNp2jLNhhmhsnwFmdJamvGlrl9HWip6J5GJI3DejkHY5vX846lhkROi84RnFxkrRcLtq+l7s0Sak0PTVNTugOla1km8e7eGQPSV01W12326kkh0hpOitcrxjpnNbwHyWgZ9JVSIr97I4V2Zp14dPK3R6bpX1lzr5q+vqH1FTM7ekkeckn/fUvVpq+3TTt1juVpqXQTs4Hhlr29bXDkQsYipbuzucIuO1roXANren7tBH9VOi6WtqWt3XSsDHg+AeMgd2SvNcNrdJQ0UlNo3S9HZpJBg1BYzIHc1oAz4k+CqhFfvZHEuzNMnx08rdehOn69bNsxqtKVNLPNWVM5mfVulBBJlDzkcyeCgqIqOTfJ1YsMMV7Fy7PfYrxcrHco7haquSlqY+TmHmOwjkR3HgrRods0FZRMptV6YpLkWn37A3B79x4Iz4FU+imM3Hgzz6PDndzXXz8S5TtO0BTYloNAwdMDkEwQswfEAqK662oag1PBJQM3LdbX8DTwE5e3se7rHcMDuUERS8kmqM8fZ+DHLdVv5uzvt9ZU2+uhraOZ0NRA8SRvbza4HgVaXuqWO9UUUOstIU9xqI27v0REQCfAHi30OVTIojJx4Nc+lx52nNdV48MtF20nTtmgf9R+jKWgrCMMq6gh72eHM/wCLCxeotoJvWzun03VU1RJXMqOmlq3yAh53nOPDH9L2KBIp7yRnHQYItOuqd3bbO2j+24flj51fO3vUF001qTT1ztNQYpmxThzTxZI3LMtcOsKhqUhtTE5xAAeCSfFWr5Rt6tN4rLK61XKkrmxRzCQ08zX7uSzGcHhyKtB1FmGqx79ViTVr3r9DtG1LSVyxPqHQlJPWHBfKxkb949vnAH1krou+2IwW51BpGwUtmY4nMm60kd4a0AA95yqnRR3sjRdmadPi/lbr0OyomlqJ3zzyvllkcXPe9xLnE8ySeZXWiLM7wiIgCIiAIiIAiIgCIiA/QC4gAEk8AAudTBPS1D6ephkgmjO6+ORpa5p7CDxC7Lb90ab8a35wrY2t7OdVXTaVf7hR09vdT1Fa98ZfdKZjiD2tdICPAhc+XUwxZFGbSTT5+VfyawxSnFuKsqQ087aZtSYZBA5xY2QtO6XAAkA8sjI4d69lFYr3XU4qKKz3GqhcSBJDTPe0458QMKc62sNy07sgslDdY4GTuvdXIBFUxzDdMMA99G4jqPDOVm6K26vuGxzSH1LV76TcqK/p926MpN7MjN33z273Xyzj0rCWsWxSTVNtXfTpf8F1g95p30V/oVRcbRdrdG2S4Wuto2PO6108DowT2AkLz0lLU1k7aekp5aiZwJEcTC5xwMngOPIEqRa6pdX291NS6ouU1UH5kha65tq2jHAnzXuDTx7lm9B3Co0NpKo1rTOEd3ragUNqD25AjYWvqJcdY95Hn+k5avO1iUlTb4rh/wDfEosa30+iRXi7ZaeeKGKaWCRkcwJie5hDXgHBIPXg8OCk21G2UlHqNtytQ/im8wtuFHjkxsmd+LxY8PZj+iF7ddfBxoD8jrP/AFb1ZZ7UGl8X46N/tQ7ut1+H8kPoKGtuExgoKOoq5Q3eLIIi9wHbgDkvf9S+pvi7d/zKT9i8VtuNwtlQai3V1TRzFu6ZKeV0biOzLSDjgFYmpNS6jj2T6RqWagurZ5au4CSRtZIHPAdFgE5ycZOPFRmyZISio1Tdfhv9hCMGm34Fcuoa5slRG6jqA+mGZ2mI5iGcZcMebxIHHtXnVlbIqW46gpNc08cn0TX1dkPn1E7W77voiEkue8gdXMlY5myvWYeD9C2zn/4xSf5qj2vHGcoZJJNfP5E9zJpOKbshVTBPSzvp6mGSGZhw+ORpa5p7CDxC61NNuII2t6kB5itd8wULW2GfeY4z80mZzjtk4+QREWhUIiIAiIgCIiAIiIAiIgCIiAIiIAiIgO+ge2Ouge84a2RpJ7BlSLazcaK7bSb/AHK3VDKikqK18kMrc4e09YyosizeNOan5Jr1r+C273dpK665UL9k9rtLKhhrorzUzyQ4OWxuihDXdnEtcPQpA2nsuotmGmLY7VtltNZbZq108Nc6YHEr2lpG5G4cmlVoiylpk0qdU2/W/wCS6y1yvCiRX/TVFa4YJKfVthuhlmEZZRvmLowQfPdvxtG7w7etSfVmvIKOshsNht9juNltMLaWinrLcyV8mBmSTLhkb7y52OHMKtkUvTqdd47oLK43t6WT+7apo9VbPqigusdtt9xtE7Z7XHSUwhZLHIcTR4aMZzuv6uTl66iisupNAaTpfqwsVrqrbT1MdRBWumDwX1D3txuRuGMEHmq1RU9kSpQdU7XpX/P1J75v4lfSjM6nslLZnU4ptQ2m89KHbxoHSER4x77fY3nnhjPIrKaguVBUbMdLWyGpY+spKmufURDOYw90ZaT44PqUSRbd1e3c7ad/hr9ym+rpckv0Bc6C32HWFPWVLIZa2z9BTNcD9ck6eJ26O/DSfQoizAeCeWV+IpjjUZSl5/xRDk2kvIlO1q40V22kXy5W6obUUlRVF8Urc4e3A4jKiyIpxwWOCgvBUJS3Sb8wiIrlQiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiA//2Q==" alt="MedCap Health">
+    </div>
+    <div class="header-body">
+      <div class="header-title">
+        <h1>MIPS Quality Dashboard — Performance Year 2026</h1>
+        <div class="sub">Group-Level Submission · 6 Entities · 6 Quality Measures · Current as of June 12, 2026</div>
+        <div class="tagline">Strength at the Heart of Care</div>
+      </div>
+      <div class="filters">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <label>Entity</label>
+          <select id="entityFilter">
+            <option value="ALL">All Entities</option>
+            <option>Harmony</option>
+            <option>M Medical Group Inc</option>
+            <option>M Medical MI PLLC</option>
+            <option>M Medical NC PLLC</option>
+            <option>M Medical SE LLC</option>
+            <option>Virginia Internal Medicine Inc</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <label>Measure</label>
+          <select id="measureFilter">
+            <option value="ALL">All Measures</option>
+            <option value="155">FALL (155)</option>
+            <option value="6">CAD (6)</option>
+            <option value="48">URIN (48)</option>
+            <option value="134">DPS (134)</option>
+            <option value="293">PARK (293)</option>
+            <option value="286">DEM (286)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('scorecards',this)">Entity Scorecards</button>
+    <button class="tab-btn" onclick="switchTab('benchmarks',this)">Benchmarks & Deciles</button>
+    <button class="tab-btn" onclick="switchTab('detail',this)">Detail Table</button>
+    <button class="tab-btn" onclick="switchTab('compare',this)">May 22 Comparison</button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="alert-bar" id="alertBar">⚠ <span id="alertText"></span></div>
+    <div class="kpi-row" id="kpiRow"></div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Total Decile Score by Entity</h3>
+        <canvas id="decileBarChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Performance Rate by Measure</h3>
+        <canvas id="perfChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Completeness Rate by Measure</h3>
+        <canvas id="complChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Missing Documentation Cases (Stacked by Measure)</h3>
+        <canvas id="missingChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SCORECARDS -->
+  <div class="tab-content" id="tab-scorecards">
+    <div class="sec-head">Current Performance · June 12, 2026 · Thresholds: Perf ≥75% · Completeness ≥75% · Each Decile ≥7 · Total ≥40 of 60</div>
+    <div class="entity-grid" id="entityGrid"></div>
+  </div>
+
+  <!-- TAB: BENCHMARKS -->
+  <div class="tab-content" id="tab-benchmarks">
+    <div class="table-wrap">
+      <h3>CMS 2026 Benchmark Thresholds — MIPS CQM</h3>
+      <hr class="gold-rule">
+      <table class="dtable">
+        <thead>
+          <tr>
+            <th style="text-align:left">Measure</th>
+            <th style="text-align:left">Code</th>
+            <th>Topped Out</th>
+            <th>Decile 1</th><th>Decile 2</th><th>Decile 3</th><th>Decile 4</th><th>Decile 5</th><th>Decile 6</th><th>Decile 10</th>
+          </tr>
+        </thead>
+        <tbody id="benchmarkBody"></tbody>
+      </table>
+      <p style="font-size:11px;color:var(--text2);margin-top:14px;line-height:1.6;">
+        <strong>Topped-Out Measures:</strong> FALL (155), CAD (6), URIN (48), DPS (134), PARK (293), and DEM (286) are all topped out — the vast majority of reporters score 100%.
+        These measures use a <strong>7-point cap</strong>. Decile 10 = 100.00%; lower deciles map to intermediate ranges.
+        To maximize points, all entities must achieve 100% performance rates on each measure.
+      </p>
+    </div>
+    <div class="chart-card">
+      <h3>Current Performance vs 100% Target (Decile 10) by Entity & Measure</h3>
+      <canvas id="bmarkChart" style="max-height:280px"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB: DETAIL -->
+  <div class="tab-content" id="tab-detail">
+    <div class="table-wrap">
+      <h3>All Entity × Measure Data — June 12, 2026</h3>
+      <hr class="gold-rule">
+      <table class="dtable" id="detailTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('entity')">Entity ↕</th>
+            <th onclick="sortTable('code')">Code ↕</th>
+            <th style="text-align:right" onclick="sortTable('denom')">Denom ↕</th>
+            <th style="text-align:right" onclick="sortTable('num')">Num ↕</th>
+            <th style="text-align:right" onclick="sortTable('excl')">Excl ↕</th>
+            <th style="text-align:right" onclick="sortTable('excep')">Excep ↕</th>
+            <th style="text-align:right" onclick="sortTable('missing')">Missing ↕</th>
+            <th style="text-align:right" onclick="sortTable('perf_rate')">Perf % ↕</th>
+            <th style="text-align:right" onclick="sortTable('compl_rate')">Compl % ↕</th>
+            <th style="text-align:right" onclick="sortTable('decile')">Decile ↕</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: COMPARE -->
+  <div class="tab-content" id="tab-compare">
+    <div class="compare-section">
+      <h3>Ethizo Qualified Registry Report: May 22 vs June 12, 2026</h3>
+      <hr class="gold-rule">
+      <p>Source: Ethizo ONC-required performance feedback (May 22) compared to current Ethizo data (June 12). Green ▲ = improvement · Red ▼ = decline.</p>
+      <div style="overflow-x:auto">
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th>Entity</th><th>Measure</th>
+              <th>May 22 Perf%</th><th>Jun 12 Perf%</th>
+              <th>May 22 Compl%</th><th>Jun 12 Compl%</th>
+              <th>May 22 Decile</th><th>Jun 12 Decile</th>
+              <th>Δ Decile</th>
+            </tr>
+          </thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Total Decile Score: May 22 vs June 12</h3>
+      <canvas id="compareTotalChart" style="max-height:260px"></canvas>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <img src="data:image/png;base64,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" alt="MedCap Health">
+    MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR · Generated June 12, 2026
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── BRAND COLORS ────────────────────────────────────────────────────────────
+const TEAL      = '#4ca9a0';
+const TEAL_DARK = '#335c67';
+const GOLD      = '#e6b75a';
+const CHARCOAL  = '#36424a';
+const PAPYRUS   = '#ede3cf';
+
+const ENTITY_COLORS = [
+  '#4ca9a0','#335c67','#e6b75a','#7bbfba','#8fa8b0','#a6c4bc'
+];
+const MEASURE_COLORS = [
+  '#4ca9a0','#335c67','#e6b75a','#7bbfba','#c9956a','#8fa8b0'
+];
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const RAW = [
+  {entity:"Harmony",tin:"872729739",measure_id:"155",code:"FALL",denom:391,num:214,excl:0,excep:42,missing:132,perf_not_met:3,perf_rate:98.58,compl_rate:66.24,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"6",code:"CAD",denom:202,num:150,excl:0,excep:34,missing:14,perf_not_met:4,perf_rate:97.40,compl_rate:93.07,decile:6},
+  {entity:"Harmony",tin:"872729739",measure_id:"48",code:"URIN",denom:0,num:0,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:0,compl_rate:0,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"134",code:"DPS",denom:592,num:440,excl:37,excep:45,missing:69,perf_not_met:38,perf_rate:92.05,compl_rate:88.34,decile:3},
+  {entity:"Harmony",tin:"872729739",measure_id:"293",code:"PARK",denom:36,num:24,excl:0,excep:10,missing:2,perf_not_met:0,perf_rate:100.00,compl_rate:94.44,decile:10},
+  {entity:"Harmony",tin:"872729739",measure_id:"286",code:"DEM",denom:259,num:221,excl:0,excep:17,missing:14,perf_not_met:7,perf_rate:96.93,compl_rate:94.59,decile:0},
+
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"155",code:"FALL",denom:11364,num:7479,excl:6,excep:471,missing:3400,perf_not_met:14,perf_rate:99.80,compl_rate:70.08,decile:3},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"6",code:"CAD",denom:4136,num:2657,excl:0,excep:561,missing:805,perf_not_met:113,perf_rate:95.92,compl_rate:80.54,decile:5},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"48",code:"URIN",denom:288,num:158,excl:0,excep:0,missing:130,perf_not_met:0,perf_rate:100.00,compl_rate:54.86,decile:10},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"134",code:"DPS",denom:14759,num:10864,excl:240,excep:858,missing:2688,perf_not_met:349,perf_rate:96.89,compl_rate:81.79,decile:3},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"293",code:"PARK",denom:432,num:244,excl:0,excep:108,missing:64,perf_not_met:16,perf_rate:93.85,compl_rate:85.19,decile:6},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"286",code:"DEM",denom:4611,num:3688,excl:0,excep:114,missing:749,perf_not_met:60,perf_rate:98.40,compl_rate:83.76,decile:0},
+
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"155",code:"FALL",denom:7909,num:3872,excl:4,excep:177,missing:3836,perf_not_met:24,perf_rate:99.37,compl_rate:51.50,decile:0},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"6",code:"CAD",denom:3052,num:1915,excl:0,excep:618,missing:469,perf_not_met:50,perf_rate:97.46,compl_rate:84.63,decile:6},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"48",code:"URIN",denom:651,num:529,excl:4,excep:0,missing:94,perf_not_met:28,perf_rate:94.97,compl_rate:85.56,decile:8},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"134",code:"DPS",denom:10010,num:6958,excl:273,excep:1312,missing:1519,perf_not_met:221,perf_rate:96.92,compl_rate:84.83,decile:3},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"293",code:"PARK",denom:317,num:162,excl:0,excep:94,missing:48,perf_not_met:13,perf_rate:92.57,compl_rate:84.86,decile:6},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"286",code:"DEM",denom:3438,num:2754,excl:0,excep:152,missing:500,perf_not_met:32,perf_rate:98.85,compl_rate:85.46,decile:0},
+
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"155",code:"FALL",denom:1651,num:979,excl:4,excep:42,missing:630,perf_not_met:0,perf_rate:100.00,compl_rate:61.84,decile:10},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"6",code:"CAD",denom:584,num:435,excl:0,excep:109,missing:19,perf_not_met:21,perf_rate:95.39,compl_rate:96.75,decile:5},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"48",code:"URIN",denom:117,num:80,excl:6,excep:0,missing:37,perf_not_met:0,perf_rate:100.00,compl_rate:68.38,decile:10},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"134",code:"DPS",denom:2178,num:1971,excl:76,excep:101,missing:76,perf_not_met:30,perf_rate:98.50,compl_rate:96.51,decile:4},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"293",code:"PARK",denom:91,num:53,excl:0,excep:31,missing:4,perf_not_met:3,perf_rate:94.64,compl_rate:95.60,decile:6},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"286",code:"DEM",denom:926,num:840,excl:0,excep:69,missing:14,perf_not_met:3,perf_rate:99.64,compl_rate:98.49,decile:0},
+
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"155",code:"FALL",denom:3532,num:2318,excl:0,excep:224,missing:989,perf_not_met:1,perf_rate:99.95,compl_rate:72.00,decile:3},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"6",code:"CAD",denom:1258,num:832,excl:0,excep:127,missing:275,perf_not_met:24,perf_rate:97.20,compl_rate:78.14,decile:6},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"48",code:"URIN",denom:21,num:12,excl:0,excep:0,missing:9,perf_not_met:0,perf_rate:100.00,compl_rate:57.14,decile:10},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"134",code:"DPS",denom:4437,num:3134,excl:85,excep:158,missing:1012,perf_not_met:133,perf_rate:95.93,compl_rate:77.19,decile:3},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"293",code:"PARK",denom:137,num:55,excl:0,excep:54,missing:26,perf_not_met:2,perf_rate:96.49,compl_rate:81.02,decile:7},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"286",code:"DEM",denom:1447,num:1090,excl:0,excep:11,missing:330,perf_not_met:16,perf_rate:98.55,compl_rate:77.19,decile:0},
+
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"155",code:"FALL",denom:1205,num:939,excl:0,excep:114,missing:144,perf_not_met:8,perf_rate:99.07,compl_rate:88.05,decile:0},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"6",code:"CAD",denom:543,num:364,excl:0,excep:120,missing:19,perf_not_met:40,perf_rate:90.10,compl_rate:96.50,decile:4},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"48",code:"URIN",denom:76,num:83,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:100.00,compl_rate:109.21,decile:10},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"134",code:"DPS",denom:1874,num:1271,excl:36,excep:189,missing:74,perf_not_met:340,perf_rate:78.90,compl_rate:96.05,decile:0},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"293",code:"PARK",denom:50,num:13,excl:0,excep:22,missing:1,perf_not_met:14,perf_rate:48.15,compl_rate:98.00,decile:4},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"286",code:"DEM",denom:670,num:548,excl:0,excep:19,missing:10,perf_not_met:93,perf_rate:85.49,compl_rate:98.51,decile:0},
+];
+
+const BENCHMARKS = [
+  {id:"155",code:"FALL",name:"Falls: Plan of Care",topped:true,d1:"16.19–95.37%",d2:"95.38–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+  {id:"6",code:"CAD",name:"CAD: Antiplatelet Therapy",topped:true,d1:"38.16–70.13%",d2:"70.14–80.56%",d3:"80.57–92.15%",d4:"92.16–99.37%",d5:"99.38–99.99%",d6:"—",d10:"100.00%"},
+  {id:"48",code:"URIN",name:"Urinary Incontinence Assessment",topped:true,d1:"1.26–64.65%",d2:"64.66–92.01%",d3:"92.02–98.64%",d4:"98.65–99.95%",d5:"99.96–99.99%",d6:"—",d10:"100.00%"},
+  {id:"134",code:"DPS",name:"Depression Screening & Follow-Up",topped:true,d1:"0.07–40.33%",d2:"40.34–76.29%",d3:"76.30–94.00%",d4:"94.01–98.96%",d5:"98.97–99.81%",d6:"99.82–99.99%",d10:"100.00%"},
+  {id:"293",code:"PARK",name:"Parkinson's Rehab Referral",topped:true,d1:"9.09–91.29%",d2:"91.30–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+  {id:"286",code:"DEM",name:"Dementia Safety Screening",topped:true,d1:"3.70–97.20%",d2:"97.21–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+];
+
+const MAY22 = [
+  {entity:"M Medical Group Inc",code:"FALL",perf_rate:99.84,compl_rate:71.37,decile:2},
+  {entity:"M Medical Group Inc",code:"CAD",perf_rate:96.30,compl_rate:81.25,decile:4},
+  {entity:"M Medical Group Inc",code:"URIN",perf_rate:100.00,compl_rate:33.97,decile:7},
+  {entity:"M Medical Group Inc",code:"DPS",perf_rate:97.31,compl_rate:82.43,decile:4},
+  {entity:"M Medical Group Inc",code:"PARK",perf_rate:94.69,compl_rate:89.63,decile:2},
+  {entity:"M Medical Group Inc",code:"DEM",perf_rate:98.58,compl_rate:84.79,decile:2},
+  {entity:"Harmony",code:"FALL",perf_rate:99.30,compl_rate:63.25,decile:2},
+  {entity:"Harmony",code:"CAD",perf_rate:100.00,compl_rate:89.04,decile:7},
+  {entity:"Harmony",code:"URIN",perf_rate:0,compl_rate:0,decile:0},
+  {entity:"Harmony",code:"DPS",perf_rate:93.67,compl_rate:85.75,decile:3},
+  {entity:"Harmony",code:"PARK",perf_rate:100.00,compl_rate:90.48,decile:7},
+  {entity:"Harmony",code:"DEM",perf_rate:98.16,compl_rate:91.44,decile:2},
+  {entity:"Virginia Internal Medicine Inc",code:"FALL",perf_rate:99.43,compl_rate:50.28,decile:2},
+  {entity:"Virginia Internal Medicine Inc",code:"CAD",perf_rate:97.46,compl_rate:85.13,decile:4},
+  {entity:"Virginia Internal Medicine Inc",code:"URIN",perf_rate:93.90,compl_rate:74.95,decile:3},
+  {entity:"Virginia Internal Medicine Inc",code:"DPS",perf_rate:97.16,compl_rate:84.92,decile:4},
+  {entity:"Virginia Internal Medicine Inc",code:"PARK",perf_rate:92.13,compl_rate:86.31,decile:2},
+  {entity:"Virginia Internal Medicine Inc",code:"DEM",perf_rate:98.94,compl_rate:84.83,decile:2},
+  {entity:"M Medical SE LLC",code:"FALL",perf_rate:100.00,compl_rate:61.67,decile:7},
+  {entity:"M Medical SE LLC",code:"CAD",perf_rate:94.84,compl_rate:95.88,decile:4},
+  {entity:"M Medical SE LLC",code:"URIN",perf_rate:100.00,compl_rate:56.64,decile:7},
+  {entity:"M Medical SE LLC",code:"DPS",perf_rate:98.34,compl_rate:94.17,decile:4},
+  {entity:"M Medical SE LLC",code:"PARK",perf_rate:96.55,compl_rate:92.59,decile:1},
+  {entity:"M Medical SE LLC",code:"DEM",perf_rate:99.81,compl_rate:97.66,decile:2},
+  {entity:"M Medical NC PLLC",code:"FALL",perf_rate:99.95,compl_rate:72.03,decile:2},
+  {entity:"M Medical NC PLLC",code:"CAD",perf_rate:97.18,compl_rate:78.68,decile:4},
+  {entity:"M Medical NC PLLC",code:"URIN",perf_rate:100.00,compl_rate:47.62,decile:7},
+  {entity:"M Medical NC PLLC",code:"DPS",perf_rate:96.68,compl_rate:77.92,decile:4},
+  {entity:"M Medical NC PLLC",code:"PARK",perf_rate:94.00,compl_rate:81.74,decile:2},
+  {entity:"M Medical NC PLLC",code:"DEM",perf_rate:98.45,compl_rate:78.57,decile:2},
+  {entity:"M Medical MI PLLC",code:"FALL",perf_rate:98.90,compl_rate:91.76,decile:0},
+  {entity:"M Medical MI PLLC",code:"CAD",perf_rate:88.70,compl_rate:94.43,decile:4},
+  {entity:"M Medical MI PLLC",code:"URIN",perf_rate:100.00,compl_rate:110.77,decile:10},
+  {entity:"M Medical MI PLLC",code:"DPS",perf_rate:80.50,compl_rate:94.33,decile:0},
+  {entity:"M Medical MI PLLC",code:"PARK",perf_rate:35.71,compl_rate:100.00,decile:3},
+  {entity:"M Medical MI PLLC",code:"DEM",perf_rate:88.67,compl_rate:97.35,decile:0},
+];
+
+const ENTITIES = [...new Set(RAW.map(r=>r.entity))];
+const MEASURES = ["FALL","CAD","URIN","DPS","PARK","DEM"];
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function getTotalDecile(e){ return RAW.filter(r=>r.entity===e).reduce((s,r)=>s+r.decile,0); }
+function badgeClass(t){ return t>=50?"badge-excellent":t>=45?"badge-good":t>=40?"badge-warn":"badge-danger"; }
+function badgeLabel(t){ return t>=50?"Excellent":t>=45?"Good":t>=40?"Acceptable":"Below Target"; }
+function dClass(d){ return d===10?"d10":d>=7?"d78":d>=5?"d56":d>=3?"d34":d>=1?"d12":"d0"; }
+function bar(v,thr=75){
+  const pct=Math.min(Math.max(v,0),100);
+  const cls=v>=thr?"bar-g":v>=60?"bar-y":"bar-r";
+  return `<div class="bar-wrap"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>`;
+}
+function fmtRate(v,denom){ return (v>0||denom>0) ? v.toFixed(1)+'%' : '—'; }
+function fmtDelta(d){
+  if(d>0) return `<span class="up">▲ +${d}</span>`;
+  if(d<0) return `<span class="down">▼ ${d}</span>`;
+  return `<span class="same">—</span>`;
+}
+
+// ── KPIs ─────────────────────────────────────────────────────────────────────
+function renderKPIs(){
+  const totals = ENTITIES.map(e=>getTotalDecile(e));
+  const avg = (totals.reduce((a,b)=>a+b,0)/ENTITIES.length).toFixed(1);
+  const meeting = totals.filter(d=>d>=40).length;
+  const belowPerf = RAW.filter(r=>r.perf_rate>0&&r.perf_rate<75).length;
+  const belowCompl = RAW.filter(r=>r.compl_rate>0&&r.compl_rate<75).length;
+  const totalMissing = RAW.reduce((s,r)=>s+r.missing,0);
+  const demZero = RAW.filter(r=>r.code==="DEM"&&r.denom>0).length;
+
+  document.getElementById('kpiRow').innerHTML = [
+    {label:"Entities Meeting Min Target (≥40)",val:`${meeting}/${ENTITIES.length}`,sub:"Minimum: 40 total decile pts",cls:"kpi-red",vc:meeting===ENTITIES.length?"cv-green":meeting>=3?"cv-yellow":"cv-red"},
+    {label:"Avg Total Decile Score",val:avg,sub:"Good ≥45 · Excellent ≥50",cls:"kpi-teal",vc:avg>=50?"cv-teal":avg>=45?"cv-teal":"cv-yellow"},
+    {label:"Perf Rate Gaps (<75%)",val:belowPerf,sub:"Entity/measure combos below threshold",cls:belowPerf===0?"kpi-green":"kpi-yellow",vc:belowPerf===0?"cv-green":"cv-yellow"},
+    {label:"Completeness Gaps (<75%)",val:belowCompl,sub:"Entity/measure combos below threshold",cls:belowCompl===0?"kpi-green":"kpi-red",vc:belowCompl===0?"cv-green":"cv-red"},
+    {label:"Total Missing Documentation",val:totalMissing.toLocaleString(),sub:"Cases needing documentation follow-up",cls:"kpi-yellow",vc:"cv-yellow"},
+  ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  const issues=[];
+  if(meeting<ENTITIES.length) issues.push(`${ENTITIES.length-meeting} of ${ENTITIES.length} entities are below the 40-point minimum total decile threshold`);
+  if(belowCompl>0) issues.push(`${belowCompl} entity/measure combinations have completeness rate below 75% — addressing missing documentation is the primary lever for improving decile scores`);
+  const demIssue = RAW.filter(r=>r.code==="DEM"&&r.decile===0&&r.denom>0);
+  if(demIssue.length>0) issues.push(`DEM (286) is a topped-out measure: Decile 10 requires 100% performance — current rates below 100% score Decile 0–2`);
+  document.getElementById('alertText').textContent = issues.join('  ·  ');
+}
+
+// ── SCORECARDS ────────────────────────────────────────────────────────────────
+function renderScorecards(){
+  document.getElementById('entityGrid').innerHTML = ENTITIES.map(entity=>{
+    const rows = RAW.filter(r=>r.entity===entity);
+    const total = rows.reduce((s,r)=>s+r.decile,0);
+    const tin = rows[0].tin;
+    const rowsHtml = rows.map(r=>{
+      const isNA = r.denom===0;
+      const perfFlag = isNA ? '<span class="flag-na">N/A</span>' : r.perf_rate<75 ? '<span class="flag-warn">⚠ Below</span>' : '<span class="flag-ok">✓</span>';
+      const complFlag = isNA ? '' : r.compl_rate<75 ? '<span class="flag-warn">⚠ Below</span>' : '<span class="flag-ok">✓</span>';
+      const dFlag = !isNA && r.decile<7 ? '<span class="flag-warn">⚠ D<7</span>' : '';
+      return `<tr>
+        <td><span class="m-code">${r.code}</span></td>
+        <td>${r.denom.toLocaleString()}</td>
+        <td>${fmtRate(r.perf_rate,r.denom)}${bar(r.perf_rate)} ${perfFlag}</td>
+        <td>${fmtRate(r.compl_rate,r.denom)}${bar(r.compl_rate)} ${complFlag}</td>
+        <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span> ${dFlag}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="entity-card">
+      <div class="entity-card-header">
+        <div><div class="entity-name">${entity}</div><div class="entity-tin">TIN: ${tin}</div></div>
+        <div class="total-badge ${badgeClass(total)}">
+          <div><span class="badge-num">${total}</span><span class="badge-denom">/40</span></div>
+          <div class="badge-label">${badgeLabel(total)}</div>
+        </div>
+      </div>
+      <table class="measure-table">
+        <thead><tr><th>Measure</th><th>Denom</th><th>Perf Rate</th><th>Compl Rate</th><th>Decile</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+}
+
+// ── OVERVIEW CHARTS ───────────────────────────────────────────────────────────
+let charts={};
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+const CHART_DEFAULTS = {
+  plugins:{legend:{labels:{font:{family:"Montserrat",size:11},color:CHARCOAL}}},
+  scales:{
+    x:{ticks:{font:{family:"Montserrat",size:10},color:CHARCOAL},grid:{color:'#ede3cf80'}},
+    y:{ticks:{font:{family:"Montserrat",size:10},color:CHARCOAL},grid:{color:'#ede3cf80'}}
+  }
+};
+
+function renderOverviewCharts(){
+  const totals = ENTITIES.map(e=>getTotalDecile(e));
+  const shortNames = ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
+
+  dc('decileBar');
+  charts['decileBar'] = new Chart(document.getElementById('decileBarChart'),{
+    type:'bar',
+    data:{
+      labels:shortNames,
+      datasets:[
+        {label:'Total Decile Score',data:totals,backgroundColor:totals.map(t=>t>=50?'#2d8a5e':t>=45?'#4ca9a0':t>=40?'#e6b75a':'#b83232'),borderRadius:6,borderSkipped:false},
+        {label:'Min Target (40)',data:new Array(ENTITIES.length).fill(40),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
+        {label:'Good (45)',data:new Array(ENTITIES.length).fill(45),type:'line',borderColor:'#e6b75a',borderDash:[3,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'Excellent (50)',data:new Array(ENTITIES.length).fill(50),type:'line',borderColor:'#2d8a5e',borderDash:[3,3],borderWidth:1.5,pointRadius:0,fill:false},
+      ]
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:65,title:{display:true,text:'Total Decile (max 60)',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
+  });
+
+  dc('perf');
+  charts['perf'] = new Chart(document.getElementById('perfChart'),{
+    type:'bar',
+    data:{
+      labels:MEASURES,
+      datasets:ENTITIES.map((e,i)=>({
+        label:shortNames[i],
+        data:MEASURES.map(m=>{const r=RAW.find(x=>x.entity===e&&x.code===m);return r?r.perf_rate:0;}),
+        backgroundColor:ENTITY_COLORS[i]+'cc',borderColor:ENTITY_COLORS[i],borderWidth:1,borderRadius:3
+      }))
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:115}}}
+  });
+
+  dc('compl');
+  charts['compl'] = new Chart(document.getElementById('complChart'),{
+    type:'bar',
+    data:{
+      labels:MEASURES,
+      datasets:ENTITIES.map((e,i)=>({
+        label:shortNames[i],
+        data:MEASURES.map(m=>{const r=RAW.find(x=>x.entity===e&&x.code===m);return r?r.compl_rate:0;}),
+        backgroundColor:ENTITY_COLORS[i]+'cc',borderColor:ENTITY_COLORS[i],borderWidth:1,borderRadius:3
+      })).concat([{
+        label:'75% Threshold',
+        data:new Array(MEASURES.length).fill(75),
+        type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false
+      }])
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:120}}}
+  });
+
+  dc('missing');
+  charts['missing'] = new Chart(document.getElementById('missingChart'),{
+    type:'bar',
+    data:{
+      labels:shortNames,
+      datasets:MEASURES.map((m,i)=>({
+        label:m,data:ENTITIES.map(e=>{const r=RAW.find(x=>x.entity===e&&x.code===m);return r?r.missing:0;}),
+        backgroundColor:MEASURE_COLORS[i]+'dd',borderColor:MEASURE_COLORS[i],borderWidth:1,borderRadius:3
+      }))
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{x:{...CHART_DEFAULTS.scales.x,stacked:true},y:{...CHART_DEFAULTS.scales.y,stacked:true,title:{display:true,text:'Missing Cases',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
+  });
+}
+
+// ── BENCHMARK TABLE ───────────────────────────────────────────────────────────
+function renderBenchmarks(){
+  document.getElementById('benchmarkBody').innerHTML = BENCHMARKS.map(b=>`
+    <tr>
+      <td>${b.name}</td>
+      <td><span class="m-code">${b.code}</span></td>
+      <td style="text-align:center">${b.topped?'<span class="flag-warn">Yes – 7pt Cap</span>':'No'}</td>
+      <td>${b.d1}</td><td>${b.d2}</td><td>${b.d3}</td><td>${b.d4}</td><td>${b.d5}</td><td>${b.d6}</td><td><strong>${b.d10}</strong></td>
+    </tr>`).join('');
+
+  const shortNames = ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
+  dc('bmark');
+  charts['bmark'] = new Chart(document.getElementById('bmarkChart'),{
+    type:'bar',
+    data:{
+      labels:MEASURES,
+      datasets:ENTITIES.map((e,i)=>({
+        label:shortNames[i],
+        data:MEASURES.map(m=>{const r=RAW.find(x=>x.entity===e&&x.code===m);return r?r.perf_rate:0;}),
+        backgroundColor:ENTITY_COLORS[i]+'cc',borderColor:ENTITY_COLORS[i],borderWidth:1,borderRadius:3
+      })).concat([{
+        label:'Decile 10 (100%)',data:new Array(MEASURES.length).fill(100),
+        type:'line',borderColor:TEAL_DARK,borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false
+      }])
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:115}}}
+  });
+}
+
+// ── DETAIL TABLE ──────────────────────────────────────────────────────────────
+let sKey='entity',sAsc=true;
+function sortTable(k){if(sKey===k)sAsc=!sAsc;else{sKey=k;sAsc=true;}renderDetail();}
+function renderDetail(){
+  const ef=document.getElementById('entityFilter').value;
+  const mf=document.getElementById('measureFilter').value;
+  let d=[...RAW];
+  if(ef!=='ALL') d=d.filter(r=>r.entity===ef);
+  if(mf!=='ALL') d=d.filter(r=>r.measure_id===mf);
+  d.sort((a,b)=>{
+    let va=a[sKey],vb=b[sKey];
+    if(typeof va==='string') return sAsc?va.localeCompare(vb):vb.localeCompare(va);
+    return sAsc?va-vb:vb-va;
+  });
+  document.getElementById('detailBody').innerHTML = d.map(r=>{
+    const pc=r.perf_rate>=75?'color:var(--green)':r.perf_rate>0?'color:var(--yellow)':''
+    const cc=r.compl_rate>=75?'color:var(--green)':r.compl_rate>0?'color:var(--yellow)':''
+    return `<tr>
+      <td>${r.entity}</td>
+      <td><span class="m-code">${r.code}</span></td>
+      <td>${r.denom.toLocaleString()}</td><td>${r.num.toLocaleString()}</td>
+      <td>${r.excl}</td><td>${r.excep}</td>
+      <td style="${r.missing>200?'color:var(--red)':''}">${r.missing.toLocaleString()}</td>
+      <td style="${pc}">${fmtRate(r.perf_rate,r.denom)}</td>
+      <td style="${cc}">${fmtRate(r.compl_rate,r.denom)}</td>
+      <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── COMPARE TABLE ─────────────────────────────────────────────────────────────
+function renderCompare(){
+  const rows=MAY22.map(m=>{
+    const j=RAW.find(r=>r.entity===m.entity&&r.code===m.code);
+    if(!j) return null;
+    return {...m,jp:j.perf_rate,jc:j.compl_rate,jd:j.decile,dd:j.decile-m.decile};
+  }).filter(Boolean);
+  document.getElementById('compareBody').innerHTML = rows.map(r=>`
+    <tr>
+      <td>${r.entity.replace(' Inc','').replace(' LLC','').replace(' PLLC','')}</td>
+      <td><span class="m-code">${r.code}</span></td>
+      <td>${r.perf_rate.toFixed(2)}%</td><td>${r.jp.toFixed(2)}%</td>
+      <td>${r.compl_rate.toFixed(2)}%</td><td>${r.jc.toFixed(2)}%</td>
+      <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>
+      <td><span class="d-pill ${dClass(r.jd)}">${r.jd}</span></td>
+      <td>${fmtDelta(r.dd)}</td>
+    </tr>`).join('');
+
+  const may22totals=ENTITIES.map(e=>MAY22.filter(r=>r.entity===e).reduce((s,r)=>s+r.decile,0));
+  const jun12totals=ENTITIES.map(e=>getTotalDecile(e));
+  const shortNames=ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
+  dc('compareTotal');
+  charts['compareTotal']=new Chart(document.getElementById('compareTotalChart'),{
+    type:'bar',
+    data:{
+      labels:shortNames,
+      datasets:[
+        {label:'May 22 Total Decile',data:may22totals,backgroundColor:'#8fa8b0cc',borderColor:'#8fa8b0',borderWidth:1,borderRadius:4},
+        {label:'June 12 Total Decile',data:jun12totals,backgroundColor:'#4ca9a0cc',borderColor:'#4ca9a0',borderWidth:1,borderRadius:4},
+        {label:'Min Target (40)',data:new Array(ENTITIES.length).fill(40),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
+      ]
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:65}}}
+  });
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='overview') renderOverviewCharts();
+  if(name==='benchmarks') renderBenchmarks();
+  if(name==='compare') renderCompare();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('entityFilter').addEventListener('change',renderDetail);
+document.getElementById('measureFilter').addEventListener('change',renderDetail);
+renderKPIs();
+renderScorecards();
+renderOverviewCharts();
+renderDetail();
+renderBenchmarks();
+renderCompare();
+</script>
+</body>
+</html>
