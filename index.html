@@ -328,7 +328,6 @@
     <button class="tab-btn" onclick="switchTab('benchmarks',this)">Benchmarks & Deciles</button>
     <button class="tab-btn" onclick="switchTab('detail',this)">Detail Table</button>
     <button class="tab-btn" onclick="switchTab('compare',this)">May 22 Comparison</button>
-    <button class="tab-btn" onclick="switchTab('patient',this)">Patient Detail</button>
   </div>
 
   <!-- TAB: OVERVIEW -->
@@ -513,94 +512,6 @@
     </div>
   </div>
 
-  <!-- TAB: PATIENT DETAIL -->
-  <!-- TAB: PATIENT DETAIL -->
-    <div class="tab-content" id="tab-patient">
-    <div class="sec-head">Patient-Level Gap Detail · Filter to a region, then narrow by facility, provider, or measure to see exactly where missing documentation and performance-not-met cases live</div>
-
-    <div class="pd-filter-row">
-      <div class="pd-filter">
-        <label>Region / Entity</label>
-        <select id="pdRegion">
-          <option value="ALL">All Regions</option>
-        </select>
-      </div>
-      <div class="pd-filter">
-        <label>Facility / Location</label>
-        <select id="pdLocation">
-          <option value="ALL">All Facilities</option>
-        </select>
-      </div>
-      <div class="pd-filter">
-        <label>Provider</label>
-        <select id="pdProvider">
-          <option value="ALL">All Providers</option>
-        </select>
-      </div>
-      <div class="pd-filter">
-        <label>Measure</label>
-        <select id="pdMeasure">
-          <option value="ALL">All Measures</option>
-          <option value="FALL">FALL (155)</option>
-          <option value="CAD">CAD (6)</option>
-          <option value="URIN">URIN (48)</option>
-          <option value="DPS">DPS (134)</option>
-          <option value="PARK">PARK (293)</option>
-          <option value="DEM">DEM (286)</option>
-        </select>
-      </div>
-      <div class="pd-filter">
-        <label>Gap Type</label>
-        <select id="pdFlag">
-          <option value="ALL">All Gaps</option>
-          <option value="missing">Missing Data</option>
-          <option value="not_met">Performance Not Met</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="kpi-row" id="pdKpiRow" style="margin-top:14px;"></div>
-
-    <div class="chart-row">
-      <div class="chart-card">
-        <h3>Gap Count by Facility (Top 12)</h3>
-        <canvas id="pdFacilityChart"></canvas>
-      </div>
-      <div class="chart-card">
-        <h3>Gap Count by Provider</h3>
-        <canvas id="pdProviderChart"></canvas>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <h3>Patient-Level Detail <span id="pdRowCount" style="font-weight:400;text-transform:none;color:var(--text2);font-size:11px;"></span></h3>
-      <hr class="gold-rule">
-      <div style="max-height:480px;overflow-y:auto;overflow-x:auto;">
-      <table class="dtable" id="pdTable">
-        <thead>
-          <tr>
-            <th onclick="sortPD('ln')">Patient ↕</th>
-            <th onclick="sortPD('mrn')">MRN ↕</th>
-            <th onclick="sortPD('dob')">DOB ↕</th>
-            <th onclick="sortPD('dos')">DOS ↕</th>
-            <th onclick="sortPD('provider')">Provider ↕</th>
-            <th onclick="sortPD('location')">Facility ↕</th>
-            <th onclick="sortPD('code')">Measure ↕</th>
-            <th onclick="sortPD('flag')">Gap Type ↕</th>
-            <th onclick="sortPD('cq')">Code ↕</th>
-          </tr>
-        </thead>
-        <tbody id="pdBody"></tbody>
-      </table>
-      </div>
-      <p style="font-size:10px;color:var(--text2);margin-top:10px;">
-        Data shown reflects gap cases only (missing documentation or performance-not-met) for the selected region.
-        Currently available: <strong>M Medical SE LLC</strong>. Additional regions will populate here as patient-level extracts are provided.
-      </p>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
   <div class="footer">
     <img src="data:image/png;base64,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" alt="MedCap Health">
     MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR (Claimocity + Ethizo combined) · Updated August 5, 2026
@@ -1283,19 +1194,11 @@ function switchTab(name,btn){
   if(name==='overview'){ renderKPIs(); renderOverviewCharts(); renderGroup(); }
   if(name==='benchmarks') renderBenchmarks();
   if(name==='compare') renderCompare();
-  if(name==='patient') renderPatientDetail();
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.getElementById('entityFilter').addEventListener('change',renderDetail);
 document.getElementById('measureFilter').addEventListener('change',renderDetail);
-pdPopulateFilters();
-pdUpdateDependentFilters();
-document.getElementById('pdRegion').addEventListener('change',()=>renderPatientDetail(true));
-document.getElementById('pdLocation').addEventListener('change',()=>renderPatientDetail(false));
-document.getElementById('pdProvider').addEventListener('change',()=>renderPatientDetail(false));
-document.getElementById('pdMeasure').addEventListener('change',()=>renderPatientDetail(false));
-document.getElementById('pdFlag').addEventListener('change',()=>renderPatientDetail(false));
 renderKPIs();
 renderGroup();
 renderScorecards();
