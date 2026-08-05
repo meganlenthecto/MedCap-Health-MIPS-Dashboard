@@ -289,7 +289,7 @@
     <div class="header-body">
       <div class="header-title">
         <h1>MIPS Quality Dashboard — Performance Year 2026</h1>
-        <div class="sub">Group-Level Submission · 6 Entities · 6 Quality Measures · Current as of June 22, 2026</div>
+        <div class="sub">Group-Level Submission · 6 Entities · 6 Quality Measures · Current as of August 5, 2026</div>
         <div class="tagline">Strength at the Heart of Care</div>
       </div>
       <div class="filters">
@@ -335,6 +335,76 @@
   <div class="tab-content active" id="tab-overview">
     <div class="alert-bar" id="alertBar">⚠ <span id="alertText"></span></div>
     <div class="kpi-row" id="kpiRow"></div>
+    <div class="sec-head" style="margin-top:6px">MedCap Health Group Performance · All 6 Entities Combined · August 5, 2026 · Source: Ethizo (Claimocity + Ethizo combined data)</div>
+
+  <!-- TAB: MEDCAP GROUP TOTAL -->
+    <!-- Group KPI strip -->
+    <div class="kpi-row" id="groupKpiRow"></div>
+
+    <!-- Group scorecard -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;">
+      <div class="chart-card">
+        <h3>Group Decile Score by Measure</h3>
+        <canvas id="groupDecileChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Group Completeness Rate by Measure</h3>
+        <canvas id="groupComplChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Group detail table -->
+    <div class="table-wrap">
+      <h3>MedCap Health — Combined Group Totals (All Entities)</h3>
+      <hr class="gold-rule">
+      <table class="dtable">
+        <thead>
+          <tr>
+            <th style="text-align:left">Measure</th>
+            <th style="text-align:right">Denominator</th>
+            <th style="text-align:right">Numerator</th>
+            <th style="text-align:right">Exclusion</th>
+            <th style="text-align:right">Exception</th>
+            <th style="text-align:right">Missing</th>
+            <th style="text-align:right">Not Met</th>
+            <th style="text-align:right">Perf Rate</th>
+            <th style="text-align:right">Compl Rate</th>
+            <th style="text-align:right">Decile</th>
+          </tr>
+        </thead>
+        <tbody id="groupTableBody"></tbody>
+        <tfoot id="groupTableFoot"></tfoot>
+      </table>
+      <p style="font-size:10px;color:var(--text2);margin-top:10px;">
+        Group totals are the sum of raw counts across all 6 entities. Performance and completeness rates are derived from combined counts.
+        Decile shown reflects the highest decile achieved by any individual entity for that measure — the actual group submission decile will be determined by CMS based on the combined submission.
+        Data source: Ethizo EMR export including Claimocity claims data.
+      </p>
+    </div>
+
+    <!-- Entity comparison table -->
+    <div class="table-wrap">
+      <h3>Entity-by-Entity Comparison — August 5, 2026</h3>
+      <hr class="gold-rule">
+      <table class="dtable">
+        <thead>
+          <tr>
+            <th style="text-align:left">Entity</th>
+            <th style="text-align:right">FALL</th>
+            <th style="text-align:right">CAD</th>
+            <th style="text-align:right">URIN</th>
+            <th style="text-align:right">DPS</th>
+            <th style="text-align:right">PARK</th>
+            <th style="text-align:right">DEM</th>
+            <th style="text-align:right">Total</th>
+            <th style="text-align:right">Status</th>
+          </tr>
+        </thead>
+        <tbody id="groupEntityBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Entity Charts -->
     <div class="chart-row">
       <div class="chart-card">
         <h3>Total Decile Score by Entity</h3>
@@ -359,7 +429,7 @@
 
   <!-- TAB: SCORECARDS -->
   <div class="tab-content" id="tab-scorecards">
-    <div class="sec-head">Current Performance · June 22, 2026 · Thresholds: Perf ≥75% · Completeness ≥75% · Each Decile ≥7 · Total ≥40 of 60</div>
+    <div class="sec-head">Current Performance · August 5, 2026 · Thresholds: Perf ≥75% · Completeness ≥75% · Each Decile ≥7 · Targets scaled per active measures (Harmony: Min 33 / Good 37 / Excellent 42 of 50 · All others: Min 40 / Good 45 / Excellent 50 of 60)</div>
     <div class="entity-grid" id="entityGrid"></div>
   </div>
 
@@ -394,7 +464,7 @@
   <!-- TAB: DETAIL -->
   <div class="tab-content" id="tab-detail">
     <div class="table-wrap">
-      <h3>All Entity × Measure Data — June 22, 2026</h3>
+      <h3>All Entity × Measure Data — August 5, 2026</h3>
       <hr class="gold-rule">
       <table class="dtable" id="detailTable">
         <thead>
@@ -419,17 +489,17 @@
   <!-- TAB: COMPARE -->
   <div class="tab-content" id="tab-compare">
     <div class="compare-section">
-      <h3>Ethizo Qualified Registry Report: May 22 vs June 22, 2026</h3>
+      <h3>Ethizo Qualified Registry Report: May 22 vs August 5, 2026</h3>
       <hr class="gold-rule">
-      <p>Source: Ethizo ONC-required performance feedback (May 22) compared to current Ethizo data (June 22). Green ▲ = improvement · Red ▼ = decline.</p>
+      <p>Source: Ethizo ONC-required performance feedback (May 22) compared to current Ethizo data (August 5). Green ▲ = improvement · Red ▼ = decline.</p>
       <div style="overflow-x:auto">
         <table class="ctable">
           <thead>
             <tr>
               <th>Entity</th><th>Measure</th>
-              <th>May 22 Perf%</th><th>Jun 12 Perf%</th>
-              <th>May 22 Compl%</th><th>Jun 12 Compl%</th>
-              <th>May 22 Decile</th><th>Jun 12 Decile</th>
+              <th>May 22 Perf%</th><th>Aug 5 Perf%</th>
+              <th>May 22 Compl%</th><th>Aug 5 Compl%</th>
+              <th>May 22 Decile</th><th>Aug 5 Decile</th>
               <th>Δ Decile</th>
             </tr>
           </thead>
@@ -438,13 +508,14 @@
       </div>
     </div>
     <div class="chart-card">
-      <h3>Total Decile Score: May 22 vs June 22</h3>
+      <h3>Total Decile Score: May 22 vs August 5</h3>
       <canvas id="compareTotalChart" style="max-height:260px"></canvas>
     </div>
   </div>
 
   <!-- TAB: PATIENT DETAIL -->
-  <div class="tab-content" id="tab-patient">
+  <!-- TAB: PATIENT DETAIL -->
+    <div class="tab-content" id="tab-patient">
     <div class="sec-head">Patient-Level Gap Detail · Filter to a region, then narrow by facility, provider, or measure to see exactly where missing documentation and performance-not-met cases live</div>
 
     <div class="pd-filter-row">
@@ -532,7 +603,7 @@
   <!-- FOOTER -->
   <div class="footer">
     <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAEjAPMDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAYHBQgCAwQJAf/EAFcQAAEDAwEEBQUGEAwDCQAAAAEAAgMEBREGBxIhMRNBUWFxCCKBkaEXMjdWcrEUFRYjJDQ1QlJzdJSys9HSGCUzVGJ1gpKi0+HwNlOTOENVV7TBwsPE/8QAGQEBAAMBAQAAAAAAAAAAAAAAAAECAwQF/8QAMxEAAgIBAwEFBwMDBQAAAAAAAAECEQMEEjEhBRNBUZEUIjJhcYGhscHRFUJSNILh8PH/2gAMAwEAAhEDEQA/ANMkREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAERfrQS4ADJPJAbMbPvJy07qPRFmv1VfrrDNX0kc7442x7rS4ZwMtzhZ3+CxpX4yXn+7F+6rn0Fa32TRFks8v8pRUEED/AJTYwD7QVm1ttRwvLK+TX3+CxpX4yXn+7F+6n8FjSvxkvP8Adi/dWwSJtRHez8zX3+CxpX4yXn+7F+6tUrnTtpLlVUrHFzYZnxgnmQHEL6XPIawk9XFfNW+nN8rz21Mn6RVJpI3wTcm7PEiIqHQEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBS7Y3p1+qdplis4AMb6pss+eXRR+e/wBbWkeJCiK2m8i3RjoKCv1vWRtzVZpKHI47jT9cd4FwDf7LlMVbKZJbYtmyQ5IiLc88IiIDz3J+5QzOzjzCPXwXzbvn3arvymT9Ir6Nahk3aRseeL3D1D/YXzlvn3arvymT9IqmThG+mfvM8aIiyOwIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiLP6E0jfNaaghsthpHTzvOXvORHCzre93U0e3kMnggbo9+ybQ9w1/rCmstGHMpwRJWVGOEEIPnHxPIDrJ7Mrf2x2yjs1npLVb4RDSUkTYYYx961owFGtkmz+07PdMMtVv+u1MmJKyrcMOnkxz7mjjhvV4kkzJbRjRw5cm99OAiIrGQRF01kwp6Z8p+9HAdp6kI4MJfZulrNwcoxu+nr/AN9y+el8+7Vd+UyfpFb+vJc4uccknJK0Cvn3brvymT9IqMypI00TuUmeNERYHoBERAEREAREQBERAEREAREQBERAEREAReq0UM90utJbKXd6ernZBFvHA3nuDRk9QyVcVN5Mu0SUgSVFjgB631Tzj+6wqUmyspKPJSa/QCTgcVs7p7yVY8Nff9WPJ++ioqYD1Pef/irg0Psl0JpB7J7XY4ZKxg4VdUemlz2gu4NPyQFZQZnLPFcGrmyrYRqzWEkVbc4ZLHZzuu6eojxLM0/8uM8eX3xwOORnktudn+itP6HsjbVYKIQsODNK7jLO4D3z3dZ9g6gFJAAOSK6ikc08sphERWMwiIgCwN9qulmEDD5sZ497v9FkLtWCmh3WH66/3vd3qOq8V4mOWXgCtA7592678pk/SK38K06u2y3V8t1q5WUlOWvne5v2Q3kXFVyxcqpGmlzQxt73RXiKc+5VrH+Z0/5w39qe5VrH+Z0/5w39qx7ufkdntmD/ADXqQZFOfcp1j/M6f84b+1c4dkutppBHDb4ZHnk1s7SU7ufkT7Xg/wA16kDRWdTbB9ptQfMsIaO187GfOQsjD5Oe02QgOobdH8qtb/7ZUbWaLLB8MqBFnddaWumjNST6fvPQfRkDWOf0L99uHNDhxwOohYJVNE7CIiAIiIAiIgCIiAIiIDPbOfhB05/WtL+uavo0OQXzl2c/CDpz+taX9c1fRocgtYcHLqeUERFc5giIgCIiALz11VHSwl7+Lj71vaVxr62KkZ53nPPvWdZ/0UeqZ5KiUySuyTy7B3BWjGzOc9vRHGeV88rpZDlzlwRFocwCr+f+Wk+UfnVgBRiy6cr7xUvfG3oaYPOZnjhz5AdZV4NLqzk1MJT2qKMI0Fzg1oJJ4AAcSpHZ9HXWuDZJwKOEjOZBl5/s/twpzY9P220NBp4d+brmfxefDs9CyyrLN5GuHs9LrkZHLbo2zUm66aN9XIOuV3m5+SOHrys/T08FOzcp4Y4W9jGho9i7EWLk3yd8MUIfCqCIig0NHfKw+G+7/iab9QxVSrW8rD4b7v8Aiab9QxVSsJcnoY/hQREUFwiIgCIiAIiIAiIgM9s5+EHTn9a0v65q+jQ5BfOXZz8IOnP61pf1zV9GhyC1hwcup5QREVzmCLpqqqmpI+kqaiKFvbI8NHtUYu2uaCAFlvifVv8AwiCxg9fE+pWUW+DLJmhj+JkrkeyNjnvcGtaMucTgAd6h2pNawwh1NaMTScQZyPMb8ntPs8VEbzfLldnfZdQejHKJnmsHo6/TlY1bRxVyebn17l0x9Cd2yaWooIZ55HSSvYC5zjkkr0Lx2T7k034sL2KGdEOsUERZiz28ENqZ297Gn5yobo0jFydHC2WwvxNUghvMM7fFZpjWsaGtaGtAwABgBfqLJuzpjFRXQIiKCwREQBERAaO+Vh8N93/E036hiqlWt5WHw33f8TTfqGKqVhLk9DH8KCIiguEREAREQBERAEREBkNNXFto1HbLs+IytoquKoMYOC8MeHYz1Zwtk3+VbRgeZoqc+NxA/wDrWriKVJopKEZcmytT5VdW4/Y+kIYx/TrC4/ohYqu8pi8VQwbTJC3shqgz27mfatf0VlkkjGWkxy5v1ZdE+3MzyGSaxTSPPNz63J9ZYuHu2x/F1/54P3FTSK/f5PMx/pmmf9v5Zcvu2x/F1/54P3E922P4uv8AzwfuKmkTv8nmP6Zpv8fyzevZ/cxedF2m6iHoRU0zZOj3t7dz1ZwMrOqI7GPgr05+QsUzpoXVE7Ymc3Hn2DtW6dqzglFKW1Hss1F08nTSD60w8B+EVn1wgiZDE2Ngw1owFzWbdnTCO1BERQWCIhIHNAF11E8NPE6WeVkUbBlz3uAAHeSqS2t+UNYdMyS2vTDIr5dGHdfIHfY0J6wXDi89zeHf1LWDXGv9W6zqDJqC81FTFvlzKdp3IY/ksHDuzz71VzSNoYZS6s3J1Ltv2a2J0kU2ooayZnAx0LHT5PZvN832qBV/lUaZY8ih01d52g8HSyRxZ9ALlqWipvZusEUS7a9q+LXWvK3UsNC+hZUMiaIXyb5buMa3ngc8ZURRFQ1SpUEREJCIiAIiIAiIgCIiAIiIAiIgCIiAIiIDdrYx8FenPyFisqwU25Cahw85/Bvgq42JRul2Y6ZibzdRsAVsxMbHG1jRhrRgLqb91HjqNzbOSIiqahERAcJ5Y4IXzSvbHGxpc5zjgNA4kk9QWonlBbcqrUU9RprSNU+nsrSY6irZlr6ztAPNsftd18OCzvla7UpHzy6AsNRiNoH01mjd748xAD2Dm71dRB1oWc5eCOrDi/uYREWZ0hERAEREAREQBERAEREAREQBERAEREAREQBERAEREBvV5PUQfs4068j+Tt7CPE8P2qzlXvk7sA2RWCTrdSMHqH+qsJdB5dU2EREJCh+2PWMWhtn9xvp86pa3oqRn4Uz+DPQPfHuaVMFqd5a+pjVaktWloZT0VFCaqoaDw6STg0HvDRn+2ok6RfHHdKjX6tqaisq5quqmfNUTvdJLI85c9xOSSe0ldKIsD0AiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIDf7YAzc2N6Y76Fp9pU6VG7I9r+zmybM9P2m56lip62lomRzRGnmJY4cxkMIPoUq93PZX8bYPzWf/LW6aPPlCV8FkIq393PZX8bYPzWf/LT3c9lfxtg/NZ/8tLRGyXkWQeRXz/283d162valrCfNjrX0zPkxfWx+hn0rbj3c9lfxth/NZ/3FpDqirZX6muldE/fjqayaVrvwg55IPHxVJs3wRabbRjURFmdQREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBEWTvmn71YxAbtbZ6MTgmIyNwHgYzj1hKKuUU0m+rMYiIhYIiyll0/er1DUTWq21FXHTDMzo28GczxPoKJWVlKMVcnSMWiIhYIiIAiIgCIiAIpgzQ8rtmj9a/TFgjY/c+huiOf5QM99nvzyUPUtNcmePLDJe18On9QiLNWTSuo73EJbXZa2qiJwJWRncz8o8PaiV8FpzjBXJ0jCopbPs21xDGXv07VkD8AtefUCSozXUdXQ1L6WtppqadnB0crC1w8QUcWuSsM2PJ8Ek/ozoREUGgREQBERAEREAREQBERAFtZtE03Tar0f9Kd6NtwZD9EUecb280Aeo5DT2ZBWqa2D2xagqdMXnR94pcnomzCVn/MjIjDm+ke3BW2JpJ2eN2nCc82JY3T96vskzX+eKSCZ8M0bo5I3Fr2OGC0jmCOorgrT266fpXyUmt7LiS3XVrTKWg+bIRkOPZvD2g9qqxZyjtdHpabOs+NTX/j8TtpYJaqqipqeMyTTPDI2Dm5xOAB6VtPo6w0el9Dz2KOSN9dHSOnrd05Je9ruPh5pA7mqqNiFlpLfS12vr2AyhtrHCm3sefJjiRnrGQ0d7u5SnY7eqvUMetrvWuPS1G44NzkMbuSbrR3AYC2xKufE8btXJLMpKPwwq/m2+PsigSiFWjsx0dZYdOy641kf4rhP2NTn/viDjJHXk8A3rOc8FjGLk6R7Oo1EcEN0vsvFvyKzhp5589DDJJjnutJwutwLSQ4EEcwVa9ftquFPKINOWK2UFAzgyORhc7/CWgeGPSspY9U6W2lyNsWq7PBQ3WcbtPW0/Def1AE8WnsBJB9Stsi+iZyy1eeC35MXu/J219ik0WZ1np+r0xqKps9YQ50RyyQDAkYeLXDxHtyFMNkGg6O+Q1OotQv6KyUecgu3elLRl2TzDQOfby7VVRbdHTl1WPHi71vp+pXUMM07t2GJ8juxrSSuMkb43lkjHMcOYcMEK37xtip7W80Gi7BQUtHG7AkljIEg7Qxu7j0knwXG37S7HqrdtWvbDRhkvmNrqcEGHPI8cub4g+hW2x4s5vatQlveLp9evp+x3Qf9mGf8f/8ApCppbB63sDdM7CLjao6ltTCydr4ZR98x1Q1zc9+COSpbQ9qbe9X2u1yAmOoqWNkx+BnLvYCpyJ2kZdnZYvHlyeG5v9Cx9m2ibLZtOfVvrbc+hg0SUtM8ZBH3rnN++cepvLHE93h1NtpvtTKYdPU8Fqo2cIyWB8hHVnPmjwA4dq7/ACkr2+a/0enoHltLRQNkfGOA6R3L1NxjxKqVJS2+7EjS6Zape0ahW3wvBL6E4g2r67ik3zeukGc7r6eMg/4VJq3aRprVmlKuk1lZwLjDFmllpRgvf1brjksOeJzkYz4KoUVVkkjrnoMEmmo014roCv1rXPcGtaXE8gAvZYhbjeaQXfpfoAzNFR0Rw4MzxI4FWpW7UNO6ba6h0Npmka2PzBWTtxv468DzneJcD3KIxT5ZfPmyQajjg5N/ZepUc1NUQAGaCWMHkXsIyupW7adttfNP0GpLJb6yhk4PbAwtcB24cXB3hw8V49tmkbVQU1BqvTjWMtdxxvRs961zm7zS0dQIzw6iO9WcFVxZjDVzWRY80Nt8O7RVy5PY5nvmlviFzo/tuH5Y+dbMbUNPWKrudNqXVE4bZ7ZTkOhaTvTSFww3hzHcOZPZlRCG5Nk6rWrTTjFq91/j5fM1ngp55yRDDJJjnuNJwut7XMcWuaWkcwRyVr1u2ispHim0xp+2W+gZwYyRhJPfhhaB4cfFZmw620rtCkZYtYWSmpa6cbkNXGcAv6g13vmHsGSDy7jKhF9EyktXqILfPF7vydtfYo5FJdo2lKnR+pJLZK8ywOb0lNNj38ZJxnvGMFRpUap0zux5I5IqcX0YREUFwrp8pj7T01+Lm+aNUsrp8pj7T01+Lm+aNaR+CR52q/1eD/d+h4tit4pL3Za/Z5fJPserjc6jcTxa7mWjvBG+O8FQaHR92k119SO5isFR0TnYy0N59J8nd87wWEt1ZUW+vgrqSV0VRBIJI3tPFrgcgrYOq1tpxmkPdAhiphf5KQUTY97L2yZzukdgPHP4ICtGpqn4GOoeTSZHLErU/wAS8/v4kJ223qkt9LRaAshDKG2saandx58mMgHvGS497u5ZXyc/+HNV/IZ+hIqaqp5aqplqaiR0k0ry973c3OJyT61cvk5/8Oar+Qz9CRIS3ZLK6zAsGhcPHpfzdqyletbGbQtL/TXRWnrLBfbbaKSCJri2qk3OlLWADHbjLs+K1z61eV0pfdK2QW+otobLebOAySEO852G7rh/aAa4d4wox8NF+0k1PFO6SfPlfBGfcoh+POnP+v8A6rnDstbBMyaLXenmSRuDmObUYII4gjiqznilgmfDNG+ORhLXseCC0jqI6l6LVbq6618VBbqaWpqZThkbBkn9g71W4+R0PDnSt5en0RZ/lHVFvrKyxVNJXUlXP0EkU7oJWvxulpGcHhxc7Cymtj9JvJ5slHSYayt6DpSOvfDpXf4gFTd1oKy13Ge318D4KmB5ZJG4cQf2d/Wrp0rGzaBsUk05FLH9NbZgRscce9JMZ8C0lme1aRe5vzOLPhWnxYetxjLq/rw/sUYi7q2lqaKrkpKyCSCeJ27JHI0tc09hBXfZbXX3i5Q26200lRUyuw1jR7T2DvKwo9lySW5voXFV11RX+TIZKl5kfFuQhx5lrKhrW+oAD0Kudk1VHR7R7HNKQGmqEeT2vBaPaVb+vrNBp7YJUWaGRsjqVsLZnNOcyGZjn+0n0YWvMT3xSNkjcWvYQ5pHMEda2yXFo8ns9RzYcqjxKUvykWJ5RFDLS7RZal4O5WU8UrD4DcI9bfaq5V+1cFDtg0FBNTSww6itww5p4ecRxB/oOwCD1H0qj7zablZq59FdKOalnYcFkjcZ7x2jvHBVyR62uGb9nZk8awy6Sj0aPEiKU6f0Dqa92aqu9HQFtLBGZGulO6ZscxGPvuHo78qiTfB3ZMsMaubpEZgilnnZBBG6SWRwaxjRkuJ4AAdqsej2QXlluZXXy72uyRvGd2pl85vceoHuyvFsDipZdplCKlrHFscrog78MMOPSBk+heXbRPdZdol0ZdHSfW5d2na73oi+83e4jj4kq6SUdzOLNlyz1HcY3t6XfPoZj3MrP/5i6d/6zf31LNp1vituwi2UMdfBcGU88TWVMJyx4y/iDk9uFRlNDNU1EdPTxPlmkcGsYxpLnE8gAOavLaVaqmybBLXa6zdFRBLCJADnDjvkj0ZwrQaadI5dVGcMuFTnfvcUkUdR/bcPyx86u3yo62VsNktzSRE90szh1Fw3QPUHO9apKj+24flj51sht70tU6j09BUW1vTV1uc6UQN4vkjcAHbo6zkA+g9aQTcJUX10449XglPjr+xrUuUbnMe17HFrmnIIPEFfj2uY8se0tc04IIwQVm9FaZuOqb5DbqCF5aXAzS482JnW4nwzgdfJZJNukepOcYRcpPoizdukjrls60neKgA1UjWl7sc9+IOd7WhUsrc8oi7UTJLTpK3YMdsjDpMHO6d0NY3xDRn+0FUavl+I4uy4taZdKu2vpYREWZ6AU62p66p9ZQWuOC3y0hoWvDi+QO397d5YHD3qgqKU2lRlPDCc4zfMbr7hERQahTrZlrqn0jbLxRz2+WqNwa0NcyQN3MNcOORx98oKilNp2jLNhhmhsnwFmdJamvGlrl9HWip6J5GJI3DejkHY5vX846lhkROi84RnFxkrRcLtq+l7s0Sak0PTVNTugOla1km8e7eGQPSV01W12326kkh0hpOitcrxjpnNbwHyWgZ9JVSIr97I4V2Zp14dPK3R6bpX1lzr5q+vqH1FTM7ekkeckn/fUvVpq+3TTt1juVpqXQTs4Hhlr29bXDkQsYipbuzucIuO1roXANren7tBH9VOi6WtqWt3XSsDHg+AeMgd2SvNcNrdJQ0UlNo3S9HZpJBg1BYzIHc1oAz4k+CqhFfvZHEuzNMnx08rdehOn69bNsxqtKVNLPNWVM5mfVulBBJlDzkcyeCgqIqOTfJ1YsMMV7Fy7PfYrxcrHco7haquSlqY+TmHmOwjkR3HgrRods0FZRMptV6YpLkWn37A3B79x4Iz4FU+imM3Hgzz6PDndzXXz8S5TtO0BTYloNAwdMDkEwQswfEAqK662oag1PBJQM3LdbX8DTwE5e3se7rHcMDuUERS8kmqM8fZ+DHLdVv5uzvt9ZU2+uhraOZ0NRA8SRvbza4HgVaXuqWO9UUUOstIU9xqI27v0REQCfAHi30OVTIojJx4Nc+lx52nNdV48MtF20nTtmgf9R+jKWgrCMMq6gh72eHM/wCLCxeotoJvWzun03VU1RJXMqOmlq3yAh53nOPDH9L2KBIp7yRnHQYItOuqd3bbO2j+24flj51fO3vUF001qTT1ztNQYpmxThzTxZI3LMtcOsKhqUhtTE5xAAeCSfFWr5Rt6tN4rLK61XKkrmxRzCQ08zX7uSzGcHhyKtB1FmGqx79ViTVr3r9DtG1LSVyxPqHQlJPWHBfKxkb949vnAH1krou+2IwW51BpGwUtmY4nMm60kd4a0AA95yqnRR3sjRdmadPi/lbr0OyomlqJ3zzyvllkcXPe9xLnE8ySeZXWiLM7wiIgCIiAIiIAiIgCIiA/QC4gAEk8AAudTBPS1D6ephkgmjO6+ORpa5p7CDxC7Lb90ab8a35wrY2t7OdVXTaVf7hR09vdT1Fa98ZfdKZjiD2tdICPAhc+XUwxZFGbSTT5+VfyawxSnFuKsqQ087aZtSYZBA5xY2QtO6XAAkA8sjI4d69lFYr3XU4qKKz3GqhcSBJDTPe0458QMKc62sNy07sgslDdY4GTuvdXIBFUxzDdMMA99G4jqPDOVm6K26vuGxzSH1LV76TcqK/p926MpN7MjN33z273Xyzj0rCWsWxSTVNtXfTpf8F1g95p30V/oVRcbRdrdG2S4Wuto2PO6108DowT2AkLz0lLU1k7aekp5aiZwJEcTC5xwMngOPIEqRa6pdX291NS6ouU1UH5kha65tq2jHAnzXuDTx7lm9B3Co0NpKo1rTOEd3ragUNqD25AjYWvqJcdY95Hn+k5avO1iUlTb4rh/wDfEosa30+iRXi7ZaeeKGKaWCRkcwJie5hDXgHBIPXg8OCk21G2UlHqNtytQ/im8wtuFHjkxsmd+LxY8PZj+iF7ddfBxoD8jrP/AFb1ZZ7UGl8X46N/tQ7ut1+H8kPoKGtuExgoKOoq5Q3eLIIi9wHbgDkvf9S+pvi7d/zKT9i8VtuNwtlQai3V1TRzFu6ZKeV0biOzLSDjgFYmpNS6jj2T6RqWagurZ5au4CSRtZIHPAdFgE5ycZOPFRmyZISio1Tdfhv9hCMGm34Fcuoa5slRG6jqA+mGZ2mI5iGcZcMebxIHHtXnVlbIqW46gpNc08cn0TX1dkPn1E7W77voiEkue8gdXMlY5myvWYeD9C2zn/4xSf5qj2vHGcoZJJNfP5E9zJpOKbshVTBPSzvp6mGSGZhw+ORpa5p7CDxC61NNuII2t6kB5itd8wULW2GfeY4z80mZzjtk4+QREWhUIiIAiIgCIiAIiIAiIgCIiAIiIAiIgO+ge2Ouge84a2RpJ7BlSLazcaK7bSb/AHK3VDKikqK18kMrc4e09YyosizeNOan5Jr1r+C273dpK665UL9k9rtLKhhrorzUzyQ4OWxuihDXdnEtcPQpA2nsuotmGmLY7VtltNZbZq108Nc6YHEr2lpG5G4cmlVoiylpk0qdU2/W/wCS6y1yvCiRX/TVFa4YJKfVthuhlmEZZRvmLowQfPdvxtG7w7etSfVmvIKOshsNht9juNltMLaWinrLcyV8mBmSTLhkb7y52OHMKtkUvTqdd47oLK43t6WT+7apo9VbPqigusdtt9xtE7Z7XHSUwhZLHIcTR4aMZzuv6uTl66iisupNAaTpfqwsVrqrbT1MdRBWumDwX1D3txuRuGMEHmq1RU9kSpQdU7XpX/P1J75v4lfSjM6nslLZnU4ptQ2m89KHbxoHSER4x77fY3nnhjPIrKaguVBUbMdLWyGpY+spKmufURDOYw90ZaT44PqUSRbd1e3c7ad/hr9ym+rpckv0Bc6C32HWFPWVLIZa2z9BTNcD9ck6eJ26O/DSfQoizAeCeWV+IpjjUZSl5/xRDk2kvIlO1q40V22kXy5W6obUUlRVF8Urc4e3A4jKiyIpxwWOCgvBUJS3Sb8wiIrlQiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiA//2Q==" alt="MedCap Health">
-    MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR · Updated June 22, 2026
+    MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR (Claimocity + Ethizo combined) · Updated August 5, 2026
   </div>
 
 </div><!-- /wrap -->
@@ -554,48 +625,52 @@ const MEASURE_COLORS = [
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 const RAW = [
-  {entity:"Harmony",tin:"872729739",measure_id:"155",code:"FALL",denom:431,num:236,excl:0,excep:45,missing:147,perf_not_met:3,perf_rate:98.72,compl_rate:65.89,decile:0},
-  {entity:"Harmony",tin:"872729739",measure_id:"6",code:"CAD",denom:224,num:167,excl:0,excep:35,missing:17,perf_not_met:5,perf_rate:97.09,compl_rate:92.41,decile:6},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"155",code:"FALL",denom:13486,num:8708,excl:6,excep:616,missing:4145,perf_not_met:17,perf_rate:99.79,compl_rate:69.26,decile:3},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"6",code:"CAD",denom:4966,num:3063,excl:0,excep:657,missing:1119,perf_not_met:127,perf_rate:96.02,compl_rate:77.47,decile:5},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"48",code:"URIN",denom:363,num:281,excl:1,excep:0,missing:81,perf_not_met:1,perf_rate:99.65,compl_rate:77.69,decile:9},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"134",code:"DPS",denom:17481,num:12444,excl:250,excep:942,missing:3661,perf_not_met:434,perf_rate:96.63,compl_rate:79.06,decile:3},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"293",code:"PARK",denom:570,num:310,excl:0,excep:125,missing:119,perf_not_met:16,perf_rate:95.09,compl_rate:79.12,decile:6},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"286",code:"DEM",denom:5477,num:4183,excl:0,excep:118,missing:1111,perf_not_met:65,perf_rate:98.47,compl_rate:79.72,decile:0},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"155",code:"FALL",denom:10254,num:5479,excl:6,excep:336,missing:4407,perf_not_met:32,perf_rate:99.41,compl_rate:57.02,decile:0},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"6",code:"CAD",denom:3933,num:2413,excl:0,excep:765,missing:676,perf_not_met:79,perf_rate:96.83,compl_rate:82.81,decile:5},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"48",code:"URIN",denom:1027,num:935,excl:8,excep:0,missing:56,perf_not_met:36,perf_rate:96.29,compl_rate:94.55,decile:8},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"134",code:"DPS",denom:13000,num:8818,excl:326,excep:1670,missing:2177,perf_not_met:335,perf_rate:96.34,compl_rate:83.25,decile:3},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"293",code:"PARK",denom:461,num:242,excl:0,excep:112,missing:90,perf_not_met:17,perf_rate:93.44,compl_rate:80.48,decile:6},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"286",code:"DEM",denom:4438,num:3545,excl:0,excep:176,missing:673,perf_not_met:44,perf_rate:98.77,compl_rate:84.84,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"155",code:"FALL",denom:647,num:385,excl:0,excep:74,missing:185,perf_not_met:3,perf_rate:99.22,compl_rate:71.41,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"6",code:"CAD",denom:333,num:233,excl:0,excep:49,missing:38,perf_not_met:13,perf_rate:94.72,compl_rate:88.59,decile:5},
   {entity:"Harmony",tin:"872729739",measure_id:"48",code:"URIN",denom:0,num:0,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:0,compl_rate:0,decile:0},
-  {entity:"Harmony",tin:"872729739",measure_id:"134",code:"DPS",denom:667,num:506,excl:37,excep:48,missing:69,perf_not_met:44,perf_rate:92.00,compl_rate:89.66,decile:3},
-  {entity:"Harmony",tin:"872729739",measure_id:"293",code:"PARK",denom:39,num:27,excl:0,excep:10,missing:2,perf_not_met:0,perf_rate:100.00,compl_rate:94.87,decile:10},
-  {entity:"Harmony",tin:"872729739",measure_id:"286",code:"DEM",denom:289,num:249,excl:0,excep:18,missing:14,perf_not_met:8,perf_rate:96.89,compl_rate:95.16,decile:0},
-
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"155",code:"FALL",denom:11714,num:7661,excl:6,excep:493,missing:3546,perf_not_met:14,perf_rate:99.80,compl_rate:69.73,decile:3},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"6",code:"CAD",denom:4274,num:2736,excl:0,excep:581,missing:847,perf_not_met:110,perf_rate:96.13,compl_rate:80.18,decile:5},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"48",code:"URIN",denom:292,num:175,excl:0,excep:0,missing:117,perf_not_met:0,perf_rate:100.00,compl_rate:59.93,decile:10},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"134",code:"DPS",denom:15207,num:11140,excl:239,excep:879,missing:2825,perf_not_met:363,perf_rate:96.84,compl_rate:81.42,decile:3},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"293",code:"PARK",denom:459,num:257,excl:0,excep:111,missing:75,perf_not_met:16,perf_rate:94.14,compl_rate:83.66,decile:6},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"286",code:"DEM",denom:4759,num:3787,excl:0,excep:116,missing:793,perf_not_met:63,perf_rate:98.36,compl_rate:83.34,decile:0},
-
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"155",code:"FALL",denom:8406,num:4085,excl:5,excep:206,missing:4089,perf_not_met:26,perf_rate:99.36,compl_rate:51.36,decile:0},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"6",code:"CAD",denom:3231,num:2007,excl:0,excep:639,missing:533,perf_not_met:52,perf_rate:97.47,compl_rate:83.50,decile:6},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"48",code:"URIN",denom:696,num:582,excl:4,excep:0,missing:84,perf_not_met:30,perf_rate:95.10,compl_rate:87.93,decile:8},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"134",code:"DPS",denom:10607,num:7292,excl:300,excep:1359,missing:1714,perf_not_met:242,perf_rate:96.79,compl_rate:83.84,decile:3},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"293",code:"PARK",denom:344,num:178,excl:0,excep:98,missing:54,perf_not_met:14,perf_rate:92.71,compl_rate:84.30,decile:6},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"286",code:"DEM",denom:3621,num:2880,excl:0,excep:159,missing:548,perf_not_met:34,perf_rate:98.83,compl_rate:84.87,decile:0},
-
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"155",code:"FALL",denom:1864,num:1044,excl:4,excep:46,missing:774,perf_not_met:0,perf_rate:100.00,compl_rate:58.48,decile:10},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"6",code:"CAD",denom:661,num:499,excl:0,excep:121,missing:19,perf_not_met:22,perf_rate:95.78,compl_rate:97.13,decile:5},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"48",code:"URIN",denom:126,num:90,excl:6,excep:0,missing:36,perf_not_met:0,perf_rate:100.00,compl_rate:71.43,decile:10},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"134",code:"DPS",denom:2437,num:2215,excl:79,excep:110,missing:74,perf_not_met:38,perf_rate:98.31,compl_rate:96.96,decile:4},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"293",code:"PARK",denom:106,num:66,excl:0,excep:34,missing:3,perf_not_met:3,perf_rate:95.65,compl_rate:97.17,decile:7},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"286",code:"DEM",denom:1035,num:951,excl:0,excep:69,missing:12,perf_not_met:3,perf_rate:99.69,compl_rate:98.84,decile:0},
-
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"155",code:"FALL",denom:3637,num:2352,excl:0,excep:237,missing:1047,perf_not_met:1,perf_rate:99.95,compl_rate:71.21,decile:3},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"6",code:"CAD",denom:1298,num:849,excl:0,excep:128,missing:297,perf_not_met:24,perf_rate:97.25,compl_rate:77.12,decile:6},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"48",code:"URIN",denom:22,num:13,excl:0,excep:0,missing:9,perf_not_met:0,perf_rate:100.00,compl_rate:59.09,decile:10},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"134",code:"DPS",denom:4583,num:3175,excl:84,excep:175,missing:1083,perf_not_met:150,perf_rate:95.49,compl_rate:76.37,decile:3},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"293",code:"PARK",denom:143,num:56,excl:0,excep:56,missing:29,perf_not_met:2,perf_rate:96.55,compl_rate:79.72,decile:7},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"286",code:"DEM",denom:1491,num:1105,excl:0,excep:12,missing:355,perf_not_met:19,perf_rate:98.31,compl_rate:76.19,decile:0},
-
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"155",code:"FALL",denom:1348,num:1060,excl:0,excep:123,missing:157,perf_not_met:8,perf_rate:99.19,compl_rate:88.35,decile:0},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"6",code:"CAD",denom:602,num:412,excl:0,excep:132,missing:18,perf_not_met:40,perf_rate:91.15,compl_rate:97.01,decile:4},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"48",code:"URIN",denom:82,num:89,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:100.00,compl_rate:108.54,decile:10},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"134",code:"DPS",denom:2061,num:1438,excl:36,excep:194,missing:72,perf_not_met:357,perf_rate:80.11,compl_rate:96.51,decile:0},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"293",code:"PARK",denom:60,num:19,excl:0,excep:25,missing:1,perf_not_met:15,perf_rate:55.88,compl_rate:98.33,decile:4},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"286",code:"DEM",denom:730,num:604,excl:0,excep:19,missing:98,perf_not_met:0,perf_rate:86.04,compl_rate:98.77,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"134",code:"DPS",denom:1026,num:661,excl:38,excep:72,missing:150,perf_not_met:143,perf_rate:82.21,compl_rate:85.38,decile:0},
+  {entity:"Harmony",tin:"872729739",measure_id:"293",code:"PARK",denom:57,num:34,excl:0,excep:15,missing:5,perf_not_met:3,perf_rate:91.89,compl_rate:91.23,decile:6},
+  {entity:"Harmony",tin:"872729739",measure_id:"286",code:"DEM",denom:413,num:320,excl:0,excep:26,missing:39,perf_not_met:28,perf_rate:91.95,compl_rate:90.56,decile:0},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"155",code:"FALL",denom:2225,num:1396,excl:4,excep:61,missing:765,perf_not_met:3,perf_rate:99.78,compl_rate:65.62,decile:3},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"6",code:"CAD",denom:823,num:619,excl:0,excep:160,missing:20,perf_not_met:24,perf_rate:96.27,compl_rate:97.57,decile:5},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"48",code:"URIN",denom:145,num:110,excl:7,excep:0,missing:34,perf_not_met:1,perf_rate:99.1,compl_rate:76.55,decile:9},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"134",code:"DPS",denom:2912,num:2659,excl:86,excep:135,missing:72,perf_not_met:46,perf_rate:98.3,compl_rate:97.53,decile:4},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"293",code:"PARK",denom:134,num:88,excl:0,excep:39,missing:4,perf_not_met:3,perf_rate:96.7,compl_rate:97.01,decile:7},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"286",code:"DEM",denom:1217,num:1130,excl:0,excep:71,missing:13,perf_not_met:3,perf_rate:99.74,compl_rate:98.93,decile:0},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"155",code:"FALL",denom:4127,num:2487,excl:0,excep:289,missing:1350,perf_not_met:1,perf_rate:99.96,compl_rate:67.29,decile:3},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"6",code:"CAD",denom:1479,num:894,excl:0,excep:145,missing:412,perf_not_met:28,perf_rate:96.96,compl_rate:72.14,decile:6},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"48",code:"URIN",denom:23,num:15,excl:0,excep:0,missing:8,perf_not_met:0,perf_rate:100.0,compl_rate:65.22,decile:10},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"134",code:"DPS",denom:5194,num:3367,excl:87,excep:203,missing:1421,perf_not_met:203,perf_rate:94.31,compl_rate:72.64,decile:3},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"293",code:"PARK",denom:166,num:59,excl:0,excep:58,missing:47,perf_not_met:2,perf_rate:96.72,compl_rate:71.69,decile:7},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"286",code:"DEM",denom:1673,num:1127,excl:0,excep:14,missing:509,perf_not_met:23,perf_rate:98.0,compl_rate:69.58,decile:0},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"155",code:"FALL",denom:1674,num:1360,excl:0,excep:138,missing:166,perf_not_met:10,perf_rate:99.22,compl_rate:90.08,decile:0},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"6",code:"CAD",denom:792,num:539,excl:0,excep:182,missing:21,perf_not_met:50,perf_rate:91.51,compl_rate:97.35,decile:4},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"48",code:"URIN",denom:104,num:103,excl:0,excep:0,missing:1,perf_not_met:0,perf_rate:100.0,compl_rate:99.04,decile:10},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"134",code:"DPS",denom:2566,num:1806,excl:39,excep:233,missing:63,perf_not_met:464,perf_rate:79.56,compl_rate:97.54,decile:0},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"293",code:"PARK",denom:78,num:31,excl:0,excep:30,missing:1,perf_not_met:16,perf_rate:65.96,compl_rate:98.72,decile:4},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"286",code:"DEM",denom:875,num:714,excl:0,excep:25,missing:7,perf_not_met:129,perf_rate:84.7,compl_rate:99.2,decile:0}
 ];
+const RAW_GROUP = [
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"155",code:"FALL",denom:32413,num:19815,excl:16,excep:1514,missing:11018,perf_not_met:66,perf_rate:99.67,compl_rate:65.99,decile:3},
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"6",code:"CAD",denom:12326,num:7761,excl:0,excep:1958,missing:2286,perf_not_met:321,perf_rate:96.03,compl_rate:81.45,decile:6},
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"48",code:"URIN",denom:1662,num:1444,excl:16,excep:0,missing:180,perf_not_met:38,perf_rate:97.44,compl_rate:89.06,decile:10},
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"134",code:"DPS",denom:42179,num:29755,excl:826,excep:3255,missing:7544,perf_not_met:1625,perf_rate:94.82,compl_rate:81.76,decile:4},
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"293",code:"PARK",denom:1466,num:764,excl:0,excep:379,missing:266,perf_not_met:57,perf_rate:93.06,compl_rate:81.86,decile:7},
+  {entity:"MedCap Health (Group)",tin:"All TINs",measure_id:"286",code:"DEM",denom:14093,num:11019,excl:0,excep:430,missing:2352,perf_not_met:292,perf_rate:97.42,compl_rate:83.31,decile:0}
+];
+
 
 const BENCHMARKS = [
   {id:"155",code:"FALL",name:"Falls: Plan of Care",topped:true,d1:"16.19–95.37%",d2:"95.38–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
@@ -652,8 +727,29 @@ const PATIENT_DETAIL = [{"fn":"Betty","ln":"Pipowski","mrn":"12476549574","dob":
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function getTotalDecile(e){ return RAW.filter(r=>r.entity===e).reduce((s,r)=>s+r.decile,0); }
-function badgeClass(t){ return t>=50?"badge-excellent":t>=45?"badge-good":t>=40?"badge-warn":"badge-danger"; }
-function badgeLabel(t){ return t>=50?"Excellent":t>=45?"Good":t>=40?"Acceptable":"Below Target"; }
+function getMaxDecile(e){
+  // Max possible decile = 10 per active measure (denom > 0)
+  return RAW.filter(r=>r.entity===e&&r.denom>0).length * 10;
+}
+function getThresholds(e){
+  // Scale 40/45/50 targets proportionally to the entity's active measure count
+  const max = getMaxDecile(e);
+  const full = 60; // 6 measures × 10
+  return {
+    min:  Math.round(40 / full * max),
+    good: Math.round(45 / full * max),
+    exc:  Math.round(50 / full * max),
+    max:  max
+  };
+}
+function badgeClass(t, e){
+  if(e){ const th=getThresholds(e); return t>=th.exc?'badge-excellent':t>=th.good?'badge-good':t>=th.min?'badge-warn':'badge-danger'; }
+  return t>=50?'badge-excellent':t>=45?'badge-good':t>=40?'badge-warn':'badge-danger';
+}
+function badgeLabel(t, e){
+  if(e){ const th=getThresholds(e); return t>=th.exc?'Excellent':t>=th.good?'Good':t>=th.min?'Acceptable':'Below Target'; }
+  return t>=50?'Excellent':t>=45?'Good':t>=40?'Acceptable':'Below Target';
+}
 function dClass(d){ return d===10?"d10":d>=7?"d78":d>=5?"d56":d>=3?"d34":d>=1?"d12":"d0"; }
 function bar(v,thr=75){
   const pct=Math.min(Math.max(v,0),100);
@@ -671,8 +767,8 @@ function fmtDelta(d){
 function renderKPIs(){
   const totals = ENTITIES.map(e=>getTotalDecile(e));
   const avg = (totals.reduce((a,b)=>a+b,0)/ENTITIES.length).toFixed(1);
-  const meeting = totals.filter(d=>d>=40).length;
-  const belowPerf = RAW.filter(r=>r.perf_rate>0&&r.perf_rate<75).length;
+  const meeting = totals.filter((d,i)=>d>=getThresholds(ENTITIES[i]).min).length;
+  const belowPerf = RAW.filter(r=>r.perf_rate>0&&r.perf_rate<90).length;
   const belowCompl = RAW.filter(r=>r.compl_rate>0&&r.compl_rate<75).length;
   const totalMissing = RAW.reduce((s,r)=>s+r.missing,0);
   const demZero = RAW.filter(r=>r.code==="DEM"&&r.denom>0).length;
@@ -680,7 +776,7 @@ function renderKPIs(){
   document.getElementById('kpiRow').innerHTML = [
     {label:"Entities Meeting Min Target (≥40)",val:`${meeting}/${ENTITIES.length}`,sub:"Minimum: 40 total decile pts",cls:"kpi-red",vc:meeting===ENTITIES.length?"cv-green":meeting>=3?"cv-yellow":"cv-red"},
     {label:"Avg Total Decile Score",val:avg,sub:"Good ≥45 · Excellent ≥50",cls:"kpi-teal",vc:avg>=50?"cv-teal":avg>=45?"cv-teal":"cv-yellow"},
-    {label:"Perf Rate Gaps (<75%)",val:belowPerf,sub:"Entity/measure combos below threshold",cls:belowPerf===0?"kpi-green":"kpi-yellow",vc:belowPerf===0?"cv-green":"cv-yellow"},
+    {label:"Perf Rate Gaps (<90%)",val:belowPerf,sub:"Combos below 90% — critical for topped-out measures",cls:belowPerf===0?"kpi-green":"kpi-red",vc:belowPerf===0?"cv-green":"cv-red"},
     {label:"Completeness Gaps (<75%)",val:belowCompl,sub:"Entity/measure combos below threshold",cls:belowCompl===0?"kpi-green":"kpi-red",vc:belowCompl===0?"cv-green":"cv-red"},
     {label:"Total Missing Documentation",val:totalMissing.toLocaleString(),sub:"Cases needing documentation follow-up",cls:"kpi-yellow",vc:"cv-yellow"},
   ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
@@ -715,9 +811,9 @@ function renderScorecards(){
     return `<div class="entity-card">
       <div class="entity-card-header">
         <div><div class="entity-name">${entity}</div><div class="entity-tin">TIN: ${tin}</div></div>
-        <div class="total-badge ${badgeClass(total)}">
-          <div><span class="badge-num">${total}</span><span class="badge-denom">/40</span></div>
-          <div class="badge-label">${badgeLabel(total)}</div>
+        <div class="total-badge ${badgeClass(total,entity)}">
+          <div><span class="badge-num">${total}</span><span class="badge-denom">/${getThresholds(entity).max}</span></div>
+          <div class="badge-label">${badgeLabel(total,entity)}</div>
         </div>
       </div>
       <table class="measure-table">
@@ -750,10 +846,10 @@ function renderOverviewCharts(){
     data:{
       labels:shortNames,
       datasets:[
-        {label:'Total Decile Score',data:totals,backgroundColor:totals.map(t=>t>=50?'#2d8a5e':t>=45?'#4ca9a0':t>=40?'#e6b75a':'#b83232'),borderRadius:6,borderSkipped:false},
-        {label:'Min Target (40)',data:new Array(ENTITIES.length).fill(40),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
-        {label:'Good (45)',data:new Array(ENTITIES.length).fill(45),type:'line',borderColor:'#e6b75a',borderDash:[3,3],borderWidth:1.5,pointRadius:0,fill:false},
-        {label:'Excellent (50)',data:new Array(ENTITIES.length).fill(50),type:'line',borderColor:'#2d8a5e',borderDash:[3,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'Total Decile Score',data:totals,backgroundColor:totals.map((t,i)=>{const th=getThresholds(ENTITIES[i]);return t>=th.exc?'#2d8a5e':t>=th.good?'#4ca9a0':t>=th.min?'#e6b75a':'#b83232';}),borderRadius:6,borderSkipped:false},
+        {label:'Min Target',data:ENTITIES.map(e=>getThresholds(e).min),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:3,fill:false},
+        {label:'Good',data:ENTITIES.map(e=>getThresholds(e).good),type:'line',borderColor:'#e6b75a',borderDash:[3,3],borderWidth:1.5,pointRadius:3,fill:false},
+        {label:'Excellent',data:ENTITIES.map(e=>getThresholds(e).exc),type:'line',borderColor:'#2d8a5e',borderDash:[3,3],borderWidth:1.5,pointRadius:3,fill:false},
       ]
     },
     options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:65,title:{display:true,text:'Total Decile (max 60)',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
@@ -803,6 +899,52 @@ function renderOverviewCharts(){
     },
     options:{...CHART_DEFAULTS,responsive:true,scales:{x:{...CHART_DEFAULTS.scales.x,stacked:true},y:{...CHART_DEFAULTS.scales.y,stacked:true,title:{display:true,text:'Missing Cases',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
   });
+
+  // ── GROUP SCORECARD on overview ─────────────────────────────────────────────
+  const ENTITY_SHORT = {
+    'Harmony':'Harmony',
+    'M Medical Group Inc':'MMG',
+    'Virginia Internal Medicine Inc':'VAIM',
+    'M Medical SE LLC':'SE',
+    'M Medical NC PLLC':'NC',
+    'M Medical MI PLLC':'MI'
+  };
+  const tbody = document.getElementById('overviewGroupBody');
+  tbody.innerHTML = RAW_GROUP.map(gr=>{
+    const perfColor = gr.perf_rate>=75?'color:var(--green)':gr.perf_rate>0?'color:var(--yellow)':'';
+    const complColor = gr.compl_rate>=75?'color:var(--green)':'color:var(--red)';
+    const entityDeciles = ENTITIES.map(e=>{
+      const r = RAW.find(x=>x.entity===e&&x.code===gr.code);
+      return r ? `<span class="d-pill ${dClass(r.decile)}" style="font-size:10px;padding:1px 5px">${r.decile}</span>` : '<span style="color:#aaa">—</span>';
+    });
+    return `<tr>
+      <td><span class="m-code">${gr.code}</span></td>
+      <td>${gr.denom.toLocaleString()}</td>
+      <td style="${gr.missing>2000?'color:var(--red)':''}">${gr.missing.toLocaleString()}</td>
+      <td style="${perfColor}">${gr.perf_rate.toFixed(2)}%</td>
+      <td style="${complColor};font-weight:${gr.compl_rate<75?'700':'400'}">${gr.compl_rate.toFixed(2)}%${gr.compl_rate<75?' ⚠':''}</td>
+      ${entityDeciles.map(d=>`<td style="text-align:center">${d}</td>`).join('')}
+      <td><span class="d-pill ${dClass(gr.decile)}">${gr.decile}</span></td>
+    </tr>`;
+  }).join('');
+
+  const tfoot = document.getElementById('overviewGroupFoot');
+  const totD = RAW_GROUP.reduce((s,r)=>s+r.denom,0);
+  const totM = RAW_GROUP.reduce((s,r)=>s+r.missing,0);
+  const totDec = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
+  const entityTotRow = ENTITIES.map(e=>{
+    const t = getTotalDecile(e);
+    const th = getThresholds(e);
+    return `<td style="text-align:center"><span class="d-pill ${badgeClass(t,e)==='badge-excellent'?'d10':badgeClass(t,e)==='badge-good'?'d78':badgeClass(t,e)==='badge-warn'?'d34':'d0'}" style="font-size:10px;padding:1px 5px">${t}/${th.max}</span></td>`;
+  }).join('');
+  tfoot.innerHTML = `<tr style="border-top:2px solid var(--gold);background:var(--papyrus);font-weight:700">
+    <td><b>TOTAL</b></td>
+    <td>${totD.toLocaleString()}</td>
+    <td>${totM.toLocaleString()}</td>
+    <td>—</td><td>—</td>
+    ${entityTotRow}
+    <td><span class="d-pill ${dClass(totDec)}" style="font-weight:800">${totDec}/60</span></td>
+  </tr>`;
 }
 
 // ── BENCHMARK TABLE ───────────────────────────────────────────────────────────
@@ -883,7 +1025,7 @@ function renderCompare(){
     </tr>`).join('');
 
   const may22totals=ENTITIES.map(e=>MAY22.filter(r=>r.entity===e).reduce((s,r)=>s+r.decile,0));
-  const jun22totals=ENTITIES.map(e=>getTotalDecile(e));
+  const aug5totals=ENTITIES.map(e=>getTotalDecile(e));
   const shortNames=ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
   dc('compareTotal');
   charts['compareTotal']=new Chart(document.getElementById('compareTotalChart'),{
@@ -892,11 +1034,127 @@ function renderCompare(){
       labels:shortNames,
       datasets:[
         {label:'May 22 Total Decile',data:may22totals,backgroundColor:'#8fa8b0cc',borderColor:'#8fa8b0',borderWidth:1,borderRadius:4},
-        {label:'June 22 Total Decile',data:jun22totals,backgroundColor:'#4ca9a0cc',borderColor:'#4ca9a0',borderWidth:1,borderRadius:4},
+        {label:'August 5 Total Decile',data:aug5totals,backgroundColor:'#4ca9a0cc',borderColor:'#4ca9a0',borderWidth:1,borderRadius:4},
         {label:'Min Target (40)',data:new Array(ENTITIES.length).fill(40),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
       ]
     },
     options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:65}}}
+  });
+}
+
+// ── MEDCAP GROUP TAB ─────────────────────────────────────────────────────────
+function renderGroup(){
+  // KPIs
+  const totalMissing = RAW_GROUP.reduce((s,r)=>s+r.missing,0);
+  const groupDecileTotal = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
+  const belowCompl = RAW_GROUP.filter(r=>r.compl_rate>0&&r.compl_rate<75).length;
+  const entityTotals = ENTITIES.map(e=>getTotalDecile(e));
+  const meetingTarget = entityTotals.filter((t,i)=>t>=getThresholds(ENTITIES[i]).min).length;
+
+  document.getElementById('groupKpiRow').innerHTML = [
+    {label:'Group Total Decile (Max Possible)',val:groupDecileTotal+'/60',sub:'Sum of highest decile per measure across entities',cls:'kpi-teal',vc:'cv-teal'},
+    {label:'Entities Meeting Min Target (≥40)',val:`${meetingTarget}/${ENTITIES.length}`,sub:'Individual entity threshold',cls:meetingTarget===ENTITIES.length?'kpi-green':'kpi-red',vc:meetingTarget===ENTITIES.length?'cv-green':'cv-red'},
+    {label:'Total Missing Documentation',val:totalMissing.toLocaleString(),sub:'Across all entities & measures',cls:'kpi-yellow',vc:'cv-yellow'},
+    {label:'Measures Below Compl. Threshold',val:belowCompl,sub:'Group completeness rate <75%',cls:belowCompl===0?'kpi-green':'kpi-red',vc:belowCompl===0?'cv-green':'cv-red'},
+  ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  // Group measure table
+  const tbody = document.getElementById('groupTableBody');
+  tbody.innerHTML = RAW_GROUP.map(r=>{
+    const perfColor = r.perf_rate>=75?'color:var(--green)':r.perf_rate>0?'color:var(--yellow)':'';
+    const complColor = r.compl_rate>=75?'color:var(--green)':'color:var(--red)';
+    return `<tr>
+      <td><span class="m-code">${r.code}</span></td>
+      <td>${r.denom.toLocaleString()}</td>
+      <td>${r.num.toLocaleString()}</td>
+      <td>${r.excl.toLocaleString()}</td>
+      <td>${r.excep.toLocaleString()}</td>
+      <td style="color:${r.missing>1000?'var(--red)':''}">${r.missing.toLocaleString()}</td>
+      <td>${r.perf_not_met.toLocaleString()}</td>
+      <td style="${perfColor}">${r.perf_rate.toFixed(2)}%</td>
+      <td style="${complColor}">${r.compl_rate.toFixed(2)}%</td>
+      <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Totals footer
+  const tfoot = document.getElementById('groupTableFoot');
+  const totD = RAW_GROUP.reduce((s,r)=>s+r.denom,0);
+  const totN = RAW_GROUP.reduce((s,r)=>s+r.num,0);
+  const totExcl = RAW_GROUP.reduce((s,r)=>s+r.excl,0);
+  const totExcep = RAW_GROUP.reduce((s,r)=>s+r.excep,0);
+  const totMiss = RAW_GROUP.reduce((s,r)=>s+r.missing,0);
+  const totNM = RAW_GROUP.reduce((s,r)=>s+r.perf_not_met,0);
+  const totDec = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
+  tfoot.innerHTML = `<tr style="border-top:2px solid var(--gold);font-weight:700;background:var(--papyrus)">
+    <td><b>TOTAL</b></td>
+    <td>${totD.toLocaleString()}</td>
+    <td>${totN.toLocaleString()}</td>
+    <td>${totExcl.toLocaleString()}</td>
+    <td>${totExcep.toLocaleString()}</td>
+    <td>${totMiss.toLocaleString()}</td>
+    <td>${totNM.toLocaleString()}</td>
+    <td>—</td><td>—</td>
+    <td><span class="d-pill ${dClass(totDec)}">${totDec}</span></td>
+  </tr>`;
+
+  // Entity comparison table
+  const ebdy = document.getElementById('groupEntityBody');
+  ebdy.innerHTML = ENTITIES.map(e=>{
+    const rows = MEASURES.map(m=>RAW.find(r=>r.entity===e&&r.code===m)||{decile:0});
+    const total = rows.reduce((s,r)=>s+r.decile,0);
+    const bclass = badgeClass(total,e);
+    const blabel = badgeLabel(total,e);
+    return `<tr>
+      <td style="font-weight:600;color:var(--teal-dark)">${e}</td>
+      ${rows.map(r=>`<td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>`).join('')}
+      <td style="font-weight:800;font-size:14px">${total}/${getThresholds(e).max}</td>
+      <td><span class="total-badge ${bclass}" style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700">${blabel}</span></td>
+    </tr>`;
+  }).join('');
+  // Add group total row
+  const groupDeciles = MEASURES.map(m=>RAW_GROUP.find(r=>r.code===m)||{decile:0});
+  ebdy.innerHTML += `<tr style="border-top:2px solid var(--gold);background:var(--papyrus);font-weight:700">
+    <td style="color:var(--teal-dark)">MedCap Group Total</td>
+    ${groupDeciles.map(r=>`<td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>`).join('')}
+    <td style="font-weight:800;font-size:14px">${groupDecileTotal}</td>
+    <td><span class="total-badge ${badgeClass(groupDecileTotal)}" style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700">${badgeLabel(groupDecileTotal)}</span></td>
+  </tr>`;
+
+  // Charts
+  dc('groupDecile');
+  charts['groupDecile'] = new Chart(document.getElementById('groupDecileChart'),{
+    type:'bar',
+    data:{
+      labels:MEASURES,
+      datasets:[
+        {label:'Group Decile',data:RAW_GROUP.map(r=>r.decile),
+          backgroundColor:RAW_GROUP.map(r=>r.decile>=7?TEAL+'cc':r.decile>=4?GOLD+'cc':'#b83232cc'),
+          borderRadius:6},
+        {label:'Target (7)',data:new Array(MEASURES.length).fill(7),type:'line',
+          borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
+      ]
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,
+      y:{...CHART_DEFAULTS.scales.y,min:0,max:12}}}
+  });
+
+  dc('groupCompl');
+  charts['groupCompl'] = new Chart(document.getElementById('groupComplChart'),{
+    type:'bar',
+    data:{
+      labels:MEASURES,
+      datasets:[
+        {label:'Completeness Rate %',data:RAW_GROUP.map(r=>r.compl_rate),
+          backgroundColor:RAW_GROUP.map(r=>r.compl_rate>=75?TEAL+'cc':'#b83232cc'),
+          borderColor:RAW_GROUP.map(r=>r.compl_rate>=75?TEAL:'#b83232'),
+          borderWidth:1,borderRadius:4},
+        {label:'75% Threshold',data:new Array(MEASURES.length).fill(75),type:'line',
+          borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false},
+      ]
+    },
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,
+      y:{...CHART_DEFAULTS.scales.y,min:0,max:110}}}
   });
 }
 
@@ -1022,7 +1280,7 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='overview') renderOverviewCharts();
+  if(name==='overview'){ renderKPIs(); renderOverviewCharts(); renderGroup(); }
   if(name==='benchmarks') renderBenchmarks();
   if(name==='compare') renderCompare();
   if(name==='patient') renderPatientDetail();
@@ -1039,6 +1297,7 @@ document.getElementById('pdProvider').addEventListener('change',()=>renderPatien
 document.getElementById('pdMeasure').addEventListener('change',()=>renderPatientDetail(false));
 document.getElementById('pdFlag').addEventListener('change',()=>renderPatientDetail(false));
 renderKPIs();
+renderGroup();
 renderScorecards();
 renderOverviewCharts();
 renderDetail();
