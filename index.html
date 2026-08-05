@@ -852,9 +852,10 @@ function renderOverviewCharts(){
     <td><b>TOTAL</b></td>
     <td>${totD.toLocaleString()}</td>
     <td>${totM.toLocaleString()}</td>
-    <td>—</td><td>—</td>
+    <td>—</td>
+    <td>—</td>
     ${entityTotRow}
-    <td><span class="d-pill ${dClass(totDec)}" style="font-weight:800">${totDec}/60</span></td>
+    <td style="text-align:center"><span class="d-pill ${dClass(totDec)}" style="font-weight:800">${totDec}/60</span></td>
   </tr>`;
 }
 
@@ -975,16 +976,16 @@ function renderGroup(){
     const perfColor = r.perf_rate>=75?'color:var(--green)':r.perf_rate>0?'color:var(--yellow)':'';
     const complColor = r.compl_rate>=75?'color:var(--green)':'color:var(--red)';
     return `<tr>
-      <td><span class="m-code">${r.code}</span></td>
-      <td>${r.denom.toLocaleString()}</td>
-      <td>${r.num.toLocaleString()}</td>
-      <td>${r.excl.toLocaleString()}</td>
-      <td>${r.excep.toLocaleString()}</td>
-      <td style="color:${r.missing>1000?'var(--red)':''}">${r.missing.toLocaleString()}</td>
-      <td>${r.perf_not_met.toLocaleString()}</td>
-      <td style="${perfColor}">${r.perf_rate.toFixed(2)}%</td>
-      <td style="${complColor}">${r.compl_rate.toFixed(2)}%</td>
-      <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>
+      <td style="text-align:left"><span class="m-code">${r.code}</span></td>
+      <td style="text-align:right">${r.denom.toLocaleString()}</td>
+      <td style="text-align:right">${r.num.toLocaleString()}</td>
+      <td style="text-align:right">${r.excl.toLocaleString()}</td>
+      <td style="text-align:right">${r.excep.toLocaleString()}</td>
+      <td style="text-align:right;color:${r.missing>1000?'var(--red)':''}">${r.missing.toLocaleString()}</td>
+      <td style="text-align:right">${r.perf_not_met.toLocaleString()}</td>
+      <td style="text-align:right;${perfColor}">${r.perf_rate.toFixed(2)}%</td>
+      <td style="text-align:right;${complColor};font-weight:${r.compl_rate<75?'700':'400'}">${r.compl_rate.toFixed(2)}%</td>
+      <td style="text-align:right"><span class="d-pill ${dClass(r.decile)}">${r.decile}</span></td>
     </tr>`;
   }).join('');
 
@@ -998,15 +999,16 @@ function renderGroup(){
   const totNM = RAW_GROUP.reduce((s,r)=>s+r.perf_not_met,0);
   const totDec = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
   tfoot.innerHTML = `<tr style="border-top:2px solid var(--gold);font-weight:700;background:var(--papyrus)">
-    <td><b>TOTAL</b></td>
-    <td>${totD.toLocaleString()}</td>
-    <td>${totN.toLocaleString()}</td>
-    <td>${totExcl.toLocaleString()}</td>
-    <td>${totExcep.toLocaleString()}</td>
-    <td>${totMiss.toLocaleString()}</td>
-    <td>${totNM.toLocaleString()}</td>
-    <td>—</td><td>—</td>
-    <td><span class="d-pill ${dClass(totDec)}">${totDec}</span></td>
+    <td style="text-align:left"><b>TOTAL</b></td>
+    <td style="text-align:right">${totD.toLocaleString()}</td>
+    <td style="text-align:right">${totN.toLocaleString()}</td>
+    <td style="text-align:right">${totExcl.toLocaleString()}</td>
+    <td style="text-align:right">${totExcep.toLocaleString()}</td>
+    <td style="text-align:right">${totMiss.toLocaleString()}</td>
+    <td style="text-align:right">${totNM.toLocaleString()}</td>
+    <td style="text-align:right">—</td>
+    <td style="text-align:right">—</td>
+    <td style="text-align:right"><span class="d-pill ${dClass(totDec)}">${totDec}</span></td>
   </tr>`;
 
   // Entity comparison table
