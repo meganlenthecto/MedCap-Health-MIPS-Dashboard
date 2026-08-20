@@ -289,7 +289,7 @@
     <div class="header-body">
       <div class="header-title">
         <h1>MIPS Quality Dashboard — Performance Year 2026</h1>
-        <div class="sub">Group-Level Submission · 6 Entities · 6 Quality Measures · Current as of August 12, 2026</div>
+        <div class="sub">Group-Level Submission · 6 Entities · 6 Quality Measures · Current as of August 19, 2026</div>
         <div class="tagline">Strength at the Heart of Care</div>
       </div>
       <div class="filters">
@@ -328,6 +328,7 @@
     <button class="tab-btn" onclick="switchTab('benchmarks',this)">Benchmarks & Deciles</button>
     <button class="tab-btn" onclick="switchTab('providers',this)">Provider Performance</button>
     <button class="tab-btn" onclick="switchTab('patient',this)">Patient Detail</button>
+    <button class="tab-btn" onclick="switchTab('goals',this)">Monthly Goals</button>
     <button class="tab-btn" onclick="switchTab('resources',this)">Measure Resources</button>
   </div>
 
@@ -335,7 +336,7 @@
   <div class="tab-content active" id="tab-overview">
     <div class="alert-bar" id="alertBar">⚠ <span id="alertText"></span></div>
     <div class="kpi-row" id="kpiRow"></div>
-    <div class="sec-head" style="margin-top:6px">MedCap Health Group Performance · All 6 Entities Combined · August 12, 2026 · Source: Ethizo (Claimocity + Ethizo combined data)</div>
+    <div class="sec-head" style="margin-top:6px">MedCap Health Group Performance · All 6 Entities Combined · August 19, 2026 · Source: Ethizo (Claimocity + Ethizo combined data)</div>
 
   <!-- TAB: MEDCAP GROUP TOTAL -->
     <!-- Group KPI strip -->
@@ -384,7 +385,7 @@
 
     <!-- Entity comparison table -->
     <div class="table-wrap">
-      <h3>Entity-by-Entity Comparison — August 12, 2026</h3>
+      <h3>Entity-by-Entity Comparison — August 19, 2026</h3>
       <hr class="gold-rule">
       <table class="dtable">
         <thead>
@@ -429,12 +430,104 @@
 
   <!-- TAB: SCORECARDS -->
   <div class="tab-content" id="tab-scorecards">
-    <div class="sec-head">Current Performance · August 12, 2026 · Thresholds: Perf ≥75% · Completeness ≥75% · Each Decile ≥7 · Targets scaled per active measures (Harmony: Min 33 / Good 37 / Excellent 42 of 50 · All others: Min 40 / Good 45 / Excellent 50 of 60)</div>
+    <div class="sec-head">Current Performance · August 19, 2026 · Thresholds: Perf ≥75% · Completeness ≥75% · Each Decile ≥7 · Targets on the 7-pt cap scale (Harmony: Min 23 / Good 26 / Excellent 29 of 35 · All others: Min 28 / Good 32 / Excellent 35 of 42)</div>
     <div class="entity-grid" id="entityGrid"></div>
+  </div>
+
+  <!-- TAB: MONTHLY GOALS -->
+  <div class="tab-content" id="tab-goals">
+    <div class="sec-head">Gap Closure Plan · Baseline August 19, 2026 · Performance period closes December 31, 2026 · Submission window January 2 – March 31, 2027</div>
+
+    <div style="margin-bottom:16px;padding:14px 18px;background:var(--papyrus);border-radius:8px;border-left:4px solid var(--gold);">
+      <div style="font-size:12px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;">WHY WE ARE PRIORITIZING THIS WAY</div>
+      <p style="font-size:11px;color:var(--text2);margin:0;line-height:1.65;">
+        Every measure is topped out, so a measure sitting at 99.9% and a measure sitting at 60% both score far below a measure at exactly 100.00%.
+        That makes the <b>number of cases standing between us and 100%</b> — not the performance rate — the thing worth managing.
+        Those counts vary enormously by measure: some entity/measure combinations are three charts away from a five-point gain, others are six hundred charts away from a three-point gain.
+        <b>We work them in order of points earned per case reviewed.</b>
+        <br><br>
+        Data completeness is a separate, prior gate. Any measure below <b>75% completeness scores zero regardless of performance rate</b>, and as a large practice we have no 3-point floor.
+        Two measures are currently in that state, so completeness must be cleared before their performance work has any value at all.
+      </p>
+    </div>
+
+    <div class="kpi-row" id="goalsKpiRow"></div>
+
+    <div class="table-wrap">
+      <h3>Priority Tiers — Efficiency Collapses as We Go Down</h3>
+      <hr class="gold-rule">
+      <table class="dtable"><thead><tr>
+        <th style="text-align:left">Tier</th><th style="text-align:left">Window</th><th>Measures</th><th>Cases to Review</th><th>Points Gained</th><th>Points per 100 Cases</th><th>Relative Efficiency</th>
+      </tr></thead><tbody id="goalsTierBody"></tbody></table>
+      <p style="font-size:11px;color:var(--text2);margin-top:12px;line-height:1.6;">
+        This is the entire argument for the sequencing. Tier 1 is <b>91 charts across the whole organization</b> and is worth more points than Tiers 3 and 4 combined,
+        which together require over 3,300. A reviewer working Tier 1 generates roughly <b>88 times</b> the score impact per case of a reviewer working Tier 4.
+        Tier 4 is not unimportant — it is where our real clinical gaps live — but it is a care-delivery program, not a documentation sprint, and it should not consume review capacity in September.
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <h3>Month-by-Month Targets</h3>
+      <hr class="gold-rule">
+      <table class="dtable"><thead><tr>
+        <th style="text-align:left">Month</th><th style="text-align:left">Primary Focus</th><th>Cases Reviewed<br><span style="font-weight:400;font-size:9px">cumulative</span></th><th>Cases Resolved<br><span style="font-weight:400;font-size:9px">at 70% yield</span></th><th>Group Points<br><span style="font-weight:400;font-size:9px">cumulative</span></th><th>Completeness Floor</th>
+      </tr></thead><tbody id="goalsMonthBody"></tbody></table>
+      <p style="font-size:11px;color:var(--text2);margin-top:12px;line-height:1.6;">
+        <b>The 70% yield assumption is the single biggest risk in this plan.</b> A performance-not-met case can only be resolved three ways: the action was performed but miscoded (fix the documentation),
+        a valid medical, patient, or system exception exists (document the exception, which removes the case from the performance denominator), or the action genuinely was not performed
+        (cannot be fixed retroactively — only forward, at a new encounter before December 31). We have assumed roughly 70% of reviewed cases fall into the first two categories.
+        <b>Track actual yield from the first week of Tier 1 and revise these targets immediately if it differs.</b>
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <h3>Work Queue — Assignable Detail</h3>
+      <hr class="gold-rule">
+      <div class="filter-bar" style="margin-bottom:10px">
+        <div class="filter-group"><label>Tier</label><select id="goalsTier"><option value="">All Tiers</option><option>Tier 1</option><option>Tier 2</option><option>Tier 3</option><option>Tier 4</option></select></div>
+        <div class="filter-group"><label>Entity</label><select id="goalsEntity"><option value="">All Entities</option></select></div>
+      </div>
+      <table class="dtable"><thead><tr>
+        <th style="text-align:left">Tier</th><th style="text-align:left">Entity</th><th>Measure</th><th>Completeness Cases</th><th>Perf-Not-Met Cases</th><th>Total Cases</th><th>Current</th><th>Target</th><th>Points</th><th>Pts/100</th>
+      </tr></thead><tbody id="goalsQueueBody"></tbody></table>
+      <p style="font-size:11px;color:var(--text2);margin-top:12px;">
+        Case counts are the August 19 baseline. Re-upload each Ethizo export to recompute against it and read progress as the delta.
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <h3>Projected Entity Trajectory</h3>
+      <hr class="gold-rule">
+      <table class="dtable"><thead><tr id="goalsTrajHead"></tr></thead><tbody id="goalsTrajBody"></tbody></table>
+      <p style="font-size:11px;color:var(--text2);margin-top:12px;line-height:1.6;">
+        <b>M Medical NC cannot reach 42.</b> Its URIN denominator of 12 falls below the CMS 20-case minimum, so that measure cannot be scored against a benchmark and is a permanent zero for PY2026.
+        NC's realistic ceiling is 35 of 42. Confirm with Ethizo whether the quality denominator is reduced accordingly.
+      </p>
+    </div>
   </div>
 
   <!-- TAB: BENCHMARKS -->
   <div class="tab-content" id="tab-benchmarks">
+
+    <!-- 7-POINT CAP EXPLAINER (remove this block to hide) -->
+    <div id="capExplainer" style="margin-bottom:16px;padding:14px 18px;background:#fdf6e8;border-radius:8px;border-left:4px solid var(--gold);">
+      <div style="font-size:12px;font-weight:800;color:var(--teal-dark);letter-spacing:.02em;margin-bottom:6px;">
+        SCORING BASIS CHANGED — TOTALS NOW SHOWN ON THE 7-POINT CAP SCALE
+      </div>
+      <p style="font-size:11px;color:var(--text2);margin:0;line-height:1.65;">
+        All six MedCap measures are flagged <b>Topped Out = Yes</b> and <b>Seven Point Cap = Yes</b> in the CMS 2026 benchmark file.
+        Under the cap, reaching Decile 10 (100.00% performance) earns <b>7 points, not 10</b>. Deciles 1&ndash;6 are unaffected.
+        The quality-category denominator still counts 10 points per required measure, so the realistic ceiling is
+        <b>42 of 60 for five-entity reporting (Harmony: 35 of 50)</b> &mdash; a maximum Quality score of 70%, or
+        <b>21 of the 30 available CPS points</b>.
+        <br><br>
+        <b>No entity's score has fallen.</b> The numerator is unchanged where measures sit below Decile 10; only the denominator
+        now reflects what is actually achievable. A total previously shown as 29/60 reads as <b>29/42</b> on this scale.
+        Target bands have been rescaled from 40/45/50-of-60 to <b>28/32/35-of-42</b> (Harmony: <b>23/26/29-of-35</b>);
+        Harmony's prior 33/37/42 bands were unreachable, since 37 and 42 both sat above its real ceiling of 35.
+      </p>
+    </div>
+
     <div class="table-wrap">
       <h3>CMS 2026 Benchmark Thresholds — MIPS CQM</h3>
       <hr class="gold-rule">
@@ -444,15 +537,27 @@
             <th style="text-align:left">Measure</th>
             <th style="text-align:left">Code</th>
             <th>Topped Out</th>
+            <th>7-Pt Cap</th>
             <th>Decile 1</th><th>Decile 2</th><th>Decile 3</th><th>Decile 4</th><th>Decile 5</th><th>Decile 6</th><th>Decile 10</th>
+            <th>Pts @ D10</th>
           </tr>
         </thead>
         <tbody id="benchmarkBody"></tbody>
       </table>
       <p style="font-size:11px;color:var(--text2);margin-top:14px;line-height:1.6;">
         <strong>Topped-Out Measures:</strong> FALL (155), CAD (6), URIN (48), DPS (134), PARK (293), and DEM (286) are all topped out — the vast majority of reporters score 100%.
-        These measures use a <strong>7-point cap</strong>. Decile 10 = 100.00%; lower deciles map to intermediate ranges.
+        All six carry the <strong>7-point cap</strong>: Decile 10 = 100.00% earns 7 points, not 10. Lower deciles map to intermediate ranges and score at face value.
         To maximize points, all entities must achieve 100% performance rates on each measure.
+        <br><br>
+        <strong>No exemption available.</strong> CMS grants alternative topped-out benchmarks — restoring the full 10 points — to a subset of measures in
+        specialty sets with limited measure choice. The 2026 benchmark file contains 46 such rows (flagged Topped Out = Yes / Seven Point Cap = No), and they carry
+        populated Decile 7, 8, and 9 ranges. The list is almost entirely pathology, radiology, oncology, anesthesia, and GI/QCDR measures — 143, 144, 249, 250,
+        317, 350, 351, 360, 364, 395–397, 405, 430, 440, 477, 489, 491, plus ACEP, CAP, GIQIC, MBHR, NHCR, QMM, RCOIR and RPAQIR registry measures.
+        <strong>None of MedCap's six measures appear on it.</strong>
+        <br><br>
+        <strong>DEM (286) has a valid benchmark.</strong> The measure is scoreable — the difficulty is that its benchmark is unusually compressed:
+        Decile 1 runs all the way to 97.20%, Decile 2 covers 97.21–99.99%, and there is nothing between that and exactly 100.00%.
+        An entity performing at 99.7% earns 2 points; the same entity at 100.0% earns 7. DEM is effectively all-or-nothing.
       </p>
     </div>
     <div class="chart-card">
@@ -463,7 +568,7 @@
 
   <!-- TAB: DETAIL -->
   <div class="tab-content" id="tab-providers">
-    <div class="sec-head">Provider-Level MIPS Performance · August 12, 2026 · 243 Providers across 6 entities · Source: Ethizo patient-level data</div>
+    <div class="sec-head">Provider-Level MIPS Performance · August 19, 2026 · 243 Providers across 6 entities · Source: Ethizo patient-level data</div>
 
     <div class="pd-filter-row">
       <div class="pd-filter">
@@ -563,14 +668,14 @@
       </div>
       <p style="font-size:10px;color:var(--text2);margin-top:8px;">
         Met = numerator (measure performed). Missing = documentation not submitted. Not Met = clinical action not completed.
-        Measure gap columns show missing+not_met combined. Data source: Ethizo patient-level export · August 12, 2026.
+        Measure gap columns show missing+not_met combined. Data source: Ethizo patient-level export · August 19, 2026.
       </p>
     </div>
   </div>
 
   <!-- TAB: PATIENT DETAIL -->
   <div class="tab-content" id="tab-patient">
-    <div class="sec-head">Patient-Level Gap Detail · Filter to find missing and performance-not-met cases · All 6 entities · August 12, 2026</div>
+    <div class="sec-head">Patient-Level Gap Detail · Filter to find missing and performance-not-met cases · All 6 entities · August 19, 2026</div>
     <div class="pd-filter-row">
       <div class="pd-filter">
         <label>Region / Entity</label>
@@ -646,7 +751,7 @@
         <tbody id="pdBody"></tbody>
       </table>
       </div>
-      <p style="font-size:10px;color:var(--text2);margin-top:10px;">Gap cases only · Table capped at 500 rows — use filters to narrow · Data: Ethizo export August 12, 2026</p>
+      <p style="font-size:10px;color:var(--text2);margin-top:10px;">Gap cases only · Table capped at 500 rows — use filters to narrow · Data: Ethizo export August 19, 2026</p>
     </div>
   </div>
   <!-- TAB: MEASURE RESOURCES -->
@@ -776,16 +881,19 @@
     <div style="margin-top:16px;padding:12px 16px;background:var(--papyrus);border-radius:8px;border-left:3px solid var(--gold);">
       <p style="font-size:10px;color:var(--text2);margin:0;line-height:1.6;">
         <b>Note on Topped-Out Measures:</b> All six measures are topped out, meaning national performance rates are very high.
-        CMS benchmarks require exactly <b>100% performance rate</b> to achieve Decile 10.
+        CMS benchmarks require exactly <b>100% performance rate</b> to achieve Decile 10, which under the 7-point cap is worth 7 points of the 10 in the denominator.
         Any patient with a missing or not-met case directly impacts your decile score.
         Documentation completeness is the primary driver of MIPS quality scores for MedCap Health in PY2026.
+        <br><br>
+        <b>Two gates, not one.</b> Data completeness below <b>75%</b> zeroes the measure outright regardless of performance rate — and as a large practice
+        (&gt;15 clinicians) MedCap has no 3-point floor to fall back on. Clearing 75% completeness is the first gate; reaching 100.00% performance is the second.
       </p>
     </div>
   </div>
 
   <div class="footer">
     <img src="data:image/png;base64,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" alt="MedCap Health">
-    MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR (Claimocity + Ethizo combined) · Updated August 12, 2026
+    MedCap Health · MIPS Performance Year 2026 · Data source: Ethizo EMR (Claimocity + Ethizo combined) · Updated August 19, 2026
   </div>
 
 </div><!-- /wrap -->
@@ -807,52 +915,52 @@ const MEASURE_COLORS = [
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 const RAW = [
-  {entity:"Harmony",tin:"872729739",measure_id:"155",code:"FALL",denom:673,num:441,excl:0,excep:83,missing:145,perf_not_met:4,perf_rate:99.1,compl_rate:78.45,decile:0},
-  {entity:"Harmony",tin:"872729739",measure_id:"6",code:"CAD",denom:344,num:270,excl:0,excep:56,missing:4,perf_not_met:14,perf_rate:95.07,compl_rate:98.84,decile:5},
-  {entity:"Harmony",tin:"872729739",measure_id:"48",code:"URIN",denom:0,num:0,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:0,compl_rate:0,decile:0},
-  {entity:"Harmony",tin:"872729739",measure_id:"134",code:"DPS",denom:1063,num:771,excl:40,excep:76,missing:30,perf_not_met:186,perf_rate:80.56,compl_rate:97.07,decile:0},
-  {entity:"Harmony",tin:"872729739",measure_id:"293",code:"PARK",denom:61,num:40,excl:0,excep:18,missing:0,perf_not_met:3,perf_rate:93.02,compl_rate:100.0,decile:6},
-  {entity:"Harmony",tin:"872729739",measure_id:"286",code:"DEM",denom:432,num:361,excl:0,excep:27,missing:8,perf_not_met:36,perf_rate:90.93,compl_rate:98.15,decile:0},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"155",code:"FALL",denom:13393,num:10339,excl:5,excep:725,missing:2322,perf_not_met:17,perf_rate:99.84,compl_rate:82.66,decile:3},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"6",code:"CAD",denom:4935,num:3855,excl:0,excep:793,missing:142,perf_not_met:145,perf_rate:96.38,compl_rate:97.12,decile:5},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"48",code:"URIN",denom:356,num:292,excl:3,excep:0,missing:62,perf_not_met:2,perf_rate:99.32,compl_rate:82.44,decile:9},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"134",code:"DPS",denom:17307,num:15130,excl:295,excep:1132,missing:468,perf_not_met:577,perf_rate:96.33,compl_rate:97.25,decile:3},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"293",code:"PARK",denom:566,num:382,excl:0,excep:162,missing:3,perf_not_met:19,perf_rate:95.26,compl_rate:99.47,decile:7},
-  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"286",code:"DEM",denom:5433,num:5058,excl:0,excep:138,missing:146,perf_not_met:91,perf_rate:98.23,compl_rate:97.31,decile:0},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"155",code:"FALL",denom:9949,num:6182,excl:6,excep:355,missing:3380,perf_not_met:34,perf_rate:99.45,compl_rate:66.01,decile:3},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"6",code:"CAD",denom:3822,num:2823,excl:0,excep:857,missing:56,perf_not_met:86,perf_rate:97.04,compl_rate:98.53,decile:6},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"48",code:"URIN",denom:881,num:779,excl:10,excep:0,missing:70,perf_not_met:32,perf_rate:96.05,compl_rate:91.96,decile:8},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"134",code:"DPS",denom:12560,num:10198,excl:397,excep:1818,missing:192,perf_not_met:352,perf_rate:96.66,compl_rate:98.42,decile:3},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"293",code:"PARK",denom:453,num:300,excl:0,excep:125,missing:13,perf_not_met:15,perf_rate:95.24,compl_rate:97.13,decile:7},
-  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"286",code:"DEM",denom:4211,num:3911,excl:0,excep:189,missing:66,perf_not_met:45,perf_rate:98.86,compl_rate:98.43,decile:0},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"155",code:"FALL",denom:2127,num:1332,excl:3,excep:62,missing:730,perf_not_met:3,perf_rate:99.78,compl_rate:65.63,decile:3},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"6",code:"CAD",denom:798,num:599,excl:0,excep:162,missing:11,perf_not_met:26,perf_rate:95.84,compl_rate:98.62,decile:5},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"48",code:"URIN",denom:117,num:91,excl:7,excep:0,missing:25,perf_not_met:1,perf_rate:98.91,compl_rate:77.27,decile:9},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"134",code:"DPS",denom:2789,num:2553,excl:84,excep:140,missing:51,perf_not_met:45,perf_rate:98.27,compl_rate:98.11,decile:4},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"293",code:"PARK",denom:134,num:90,excl:0,excep:38,missing:3,perf_not_met:3,perf_rate:96.77,compl_rate:97.76,decile:7},
-  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"286",code:"DEM",denom:1149,num:1067,excl:0,excep:71,missing:10,perf_not_met:1,perf_rate:99.91,compl_rate:99.13,decile:0},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"155",code:"FALL",denom:4094,num:3260,excl:0,excep:314,missing:520,perf_not_met:1,perf_rate:99.97,compl_rate:87.3,decile:3},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"6",code:"CAD",denom:1450,num:1255,excl:0,excep:158,missing:8,perf_not_met:29,perf_rate:97.74,compl_rate:99.45,decile:6},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"48",code:"URIN",denom:12,num:10,excl:0,excep:0,missing:2,perf_not_met:0,perf_rate:100.0,compl_rate:83.33,decile:10},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"134",code:"DPS",denom:5110,num:4623,excl:119,excep:241,missing:30,perf_not_met:216,perf_rate:95.54,compl_rate:99.4,decile:3},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"293",code:"PARK",denom:169,num:83,excl:0,excep:82,missing:1,perf_not_met:3,perf_rate:96.51,compl_rate:99.41,decile:7},
-  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"286",code:"DEM",denom:1671,num:1610,excl:0,excep:17,missing:17,perf_not_met:27,perf_rate:98.35,compl_rate:98.98,decile:0},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"155",code:"FALL",denom:1525,num:1300,excl:0,excep:130,missing:86,perf_not_met:9,perf_rate:99.31,compl_rate:94.36,decile:0},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"6",code:"CAD",denom:708,num:479,excl:0,excep:170,missing:13,perf_not_met:46,perf_rate:91.24,compl_rate:98.16,decile:4},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"48",code:"URIN",denom:106,num:105,excl:0,excep:0,missing:1,perf_not_met:0,perf_rate:100.0,compl_rate:99.06,decile:10},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"134",code:"DPS",denom:2357,num:1625,excl:40,excep:227,missing:51,perf_not_met:454,perf_rate:78.16,compl_rate:97.8,decile:0},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"293",code:"PARK",denom:67,num:20,excl:0,excep:30,missing:1,perf_not_met:16,perf_rate:55.56,compl_rate:98.51,decile:4},
-  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"286",code:"DEM",denom:784,num:622,excl:0,excep:23,missing:13,perf_not_met:126,perf_rate:83.16,compl_rate:98.34,decile:0}
+  {entity:"Harmony",tin:"872729739",measure_id:"155",code:"FALL",denom:695,num:461,excl:0,excep:85,missing:146,perf_not_met:3,perf_rate:99.35,compl_rate:78.99,decile:2,eth_decile:0,flag:""},
+  {entity:"Harmony",tin:"872729739",measure_id:"6",code:"CAD",denom:354,num:277,excl:0,excep:59,missing:3,perf_not_met:15,perf_rate:94.86,compl_rate:99.15,decile:4,eth_decile:5,flag:""},
+  {entity:"Harmony",tin:"872729739",measure_id:"48",code:"URIN",denom:0,num:0,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:0.0,compl_rate:0.0,decile:0,eth_decile:0,flag:"nodenom"},
+  {entity:"Harmony",tin:"872729739",measure_id:"134",code:"DPS",denom:1095,num:788,excl:41,excep:77,missing:31,perf_not_met:199,perf_rate:79.84,compl_rate:97.17,decile:3,eth_decile:0,flag:""},
+  {entity:"Harmony",tin:"872729739",measure_id:"293",code:"PARK",denom:62,num:41,excl:0,excep:18,missing:0,perf_not_met:3,perf_rate:93.18,compl_rate:100.0,decile:2,eth_decile:6,flag:""},
+  {entity:"Harmony",tin:"872729739",measure_id:"286",code:"DEM",denom:435,num:362,excl:0,excep:29,missing:8,perf_not_met:36,perf_rate:90.95,compl_rate:98.16,decile:1,eth_decile:0,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"155",code:"FALL",denom:13614,num:10540,excl:5,excep:750,missing:2303,perf_not_met:21,perf_rate:99.79,compl_rate:83.08,decile:2,eth_decile:3,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"6",code:"CAD",denom:5039,num:3944,excl:0,excep:814,missing:135,perf_not_met:146,perf_rate:96.43,compl_rate:97.32,decile:4,eth_decile:5,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"48",code:"URIN",denom:361,num:298,excl:3,excep:0,missing:61,perf_not_met:2,perf_rate:99.33,compl_rate:83.1,decile:4,eth_decile:9,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"134",code:"DPS",denom:17600,num:15415,excl:297,excep:1146,missing:449,perf_not_met:590,perf_rate:96.31,compl_rate:97.45,decile:4,eth_decile:3,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"293",code:"PARK",denom:586,num:403,excl:0,excep:164,missing:0,perf_not_met:19,perf_rate:95.5,compl_rate:100.0,decile:2,eth_decile:7,flag:""},
+  {entity:"M Medical Group Inc",tin:"134364280",measure_id:"286",code:"DEM",denom:5514,num:5138,excl:0,excep:139,missing:143,perf_not_met:94,perf_rate:98.2,compl_rate:97.41,decile:2,eth_decile:0,flag:""},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"155",code:"FALL",denom:10166,num:6389,excl:7,excep:371,missing:3370,perf_not_met:36,perf_rate:99.43,compl_rate:66.85,decile:0,eth_decile:0,flag:"compl"},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"6",code:"CAD",denom:3915,num:2899,excl:0,excep:876,missing:53,perf_not_met:87,perf_rate:97.09,compl_rate:98.65,decile:4,eth_decile:6,flag:""},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"48",code:"URIN",denom:902,num:802,excl:10,excep:0,missing:66,perf_not_met:34,perf_rate:95.93,compl_rate:92.68,decile:3,eth_decile:8,flag:""},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"134",code:"DPS",denom:12849,num:10461,excl:397,excep:1850,missing:177,perf_not_met:361,perf_rate:96.66,compl_rate:98.62,decile:4,eth_decile:3,flag:""},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"293",code:"PARK",denom:470,num:316,excl:0,excep:127,missing:12,perf_not_met:15,perf_rate:95.47,compl_rate:97.45,decile:2,eth_decile:7,flag:""},
+  {entity:"Virginia Internal Medicine Inc",tin:"461221912",measure_id:"286",code:"DEM",denom:4297,num:4001,excl:0,excep:192,missing:58,perf_not_met:46,perf_rate:98.86,compl_rate:98.65,decile:2,eth_decile:0,flag:""},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"155",code:"FALL",denom:2159,num:1367,excl:4,excep:66,missing:723,perf_not_met:3,perf_rate:99.78,compl_rate:66.51,decile:0,eth_decile:3,flag:"compl"},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"6",code:"CAD",denom:810,num:609,excl:0,excep:164,missing:11,perf_not_met:26,perf_rate:95.91,compl_rate:98.64,decile:4,eth_decile:5,flag:""},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"48",code:"URIN",denom:119,num:93,excl:7,excep:0,missing:25,perf_not_met:1,perf_rate:98.94,compl_rate:78.99,decile:4,eth_decile:9,flag:""},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"134",code:"DPS",denom:2829,num:2591,excl:84,excep:141,missing:52,perf_not_met:45,perf_rate:98.29,compl_rate:98.16,decile:4,eth_decile:4,flag:""},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"293",code:"PARK",denom:135,num:91,excl:0,excep:38,missing:3,perf_not_met:3,perf_rate:96.81,compl_rate:97.78,decile:2,eth_decile:7,flag:""},
+  {entity:"M Medical SE LLC",tin:"873189230",measure_id:"286",code:"DEM",denom:1161,num:1078,excl:0,excep:72,missing:10,perf_not_met:1,perf_rate:99.91,compl_rate:99.14,decile:2,eth_decile:0,flag:""},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"155",code:"FALL",denom:4169,num:3326,excl:0,excep:327,missing:515,perf_not_met:1,perf_rate:99.97,compl_rate:87.65,decile:2,eth_decile:3,flag:""},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"6",code:"CAD",denom:1487,num:1288,excl:0,excep:163,missing:7,perf_not_met:29,perf_rate:97.8,compl_rate:99.53,decile:4,eth_decile:6,flag:""},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"48",code:"URIN",denom:12,num:11,excl:0,excep:0,missing:1,perf_not_met:0,perf_rate:100.0,compl_rate:91.67,decile:0,eth_decile:10,flag:"casemin"},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"134",code:"DPS",denom:5201,num:4703,excl:121,excep:249,missing:27,perf_not_met:222,perf_rate:95.49,compl_rate:99.48,decile:4,eth_decile:3,flag:""},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"293",code:"PARK",denom:173,num:87,excl:0,excep:82,missing:1,perf_not_met:3,perf_rate:96.67,compl_rate:99.42,decile:2,eth_decile:7,flag:""},
+  {entity:"M Medical NC PLLC",tin:"992319555",measure_id:"286",code:"DEM",denom:1699,num:1639,excl:0,excep:17,missing:13,perf_not_met:30,perf_rate:98.2,compl_rate:99.23,decile:2,eth_decile:0,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"155",code:"FALL",denom:1626,num:1382,excl:0,excep:132,missing:103,perf_not_met:9,perf_rate:99.31,compl_rate:93.67,decile:2,eth_decile:0,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"6",code:"CAD",denom:753,num:512,excl:0,excep:191,missing:5,perf_not_met:45,perf_rate:91.92,compl_rate:99.34,decile:3,eth_decile:5,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"48",code:"URIN",denom:111,num:111,excl:0,excep:0,missing:0,perf_not_met:0,perf_rate:100.0,compl_rate:100.0,decile:10,eth_decile:10,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"134",code:"DPS",denom:2482,num:1738,excl:41,excep:238,missing:43,perf_not_met:463,perf_rate:78.96,compl_rate:98.27,decile:3,eth_decile:0,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"293",code:"PARK",denom:70,num:23,excl:0,excep:30,missing:1,perf_not_met:16,perf_rate:58.97,compl_rate:98.57,decile:1,eth_decile:4,flag:""},
+  {entity:"M Medical MI PLLC",tin:"332014965",measure_id:"286",code:"DEM",denom:847,num:684,excl:0,excep:24,missing:8,perf_not_met:131,perf_rate:83.93,compl_rate:99.06,decile:1,eth_decile:0,flag:""}
 ];
 
 
 const BENCHMARKS = [
-  {id:"155",code:"FALL",name:"Falls: Plan of Care",topped:true,d1:"16.19–95.37%",d2:"95.38–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
-  {id:"6",code:"CAD",name:"CAD: Antiplatelet Therapy",topped:true,d1:"38.16–70.13%",d2:"70.14–80.56%",d3:"80.57–92.15%",d4:"92.16–99.37%",d5:"99.38–99.99%",d6:"—",d10:"100.00%"},
-  {id:"48",code:"URIN",name:"Urinary Incontinence Assessment",topped:true,d1:"1.26–64.65%",d2:"64.66–92.01%",d3:"92.02–98.64%",d4:"98.65–99.95%",d5:"99.96–99.99%",d6:"—",d10:"100.00%"},
-  {id:"134",code:"DPS",name:"Depression Screening & Follow-Up",topped:true,d1:"0.07–40.33%",d2:"40.34–76.29%",d3:"76.30–94.00%",d4:"94.01–98.96%",d5:"98.97–99.81%",d6:"99.82–99.99%",d10:"100.00%"},
-  {id:"293",code:"PARK",name:"Parkinson's Rehab Referral",topped:true,d1:"9.09–91.29%",d2:"91.30–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
-  {id:"286",code:"DEM",name:"Dementia Safety Screening",topped:true,d1:"3.70–97.20%",d2:"97.21–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+  {id:"155",code:"FALL",name:"Falls: Plan of Care",topped:true,cap:true,d1:"16.19–95.37%",d2:"95.38–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+  {id:"6",code:"CAD",name:"CAD: Antiplatelet Therapy",topped:true,cap:true,d1:"38.16–70.13%",d2:"70.14–80.56%",d3:"80.57–92.15%",d4:"92.16–99.37%",d5:"99.38–99.99%",d6:"—",d10:"100.00%"},
+  {id:"48",code:"URIN",name:"Urinary Incontinence Assessment",topped:true,cap:true,d1:"1.26–64.65%",d2:"64.66–92.01%",d3:"92.02–98.64%",d4:"98.65–99.95%",d5:"99.96–99.99%",d6:"—",d10:"100.00%"},
+  {id:"134",code:"DPS",name:"Depression Screening & Follow-Up",topped:true,cap:true,d1:"0.07–40.33%",d2:"40.34–76.29%",d3:"76.30–94.00%",d4:"94.01–98.96%",d5:"98.97–99.81%",d6:"99.82–99.99%",d10:"100.00%"},
+  {id:"293",code:"PARK",name:"Parkinson's Rehab Referral",topped:true,cap:true,d1:"9.09–91.29%",d2:"91.30–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
+  {id:"286",code:"DEM",name:"Dementia Safety Screening",topped:true,cap:true,d1:"3.70–97.20%",d2:"97.21–99.99%",d3:"—",d4:"—",d5:"—",d6:"—",d10:"100.00%"},
 ];
 
 const MAY22 = [
@@ -12513,28 +12621,48 @@ const PATIENT_DETAIL = [
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function getTotalDecile(e){ return RAW.filter(r=>r.entity===e).reduce((s,r)=>s+r.decile,0); }
+// ── 7-POINT CAP SCORING ──────────────────────────────────────────────────────
+// All six MedCap measures (155, 6, 48, 134, 293, 286) are flagged Topped Out = Yes
+// AND Seven Point Cap = Yes in the CMS 2026 benchmark file. Under the cap, achieving
+// Decile 10 (100.00% performance) earns 7 points, not 10. Deciles 1-6 are unaffected.
+// None of the six appear on CMS's alternative topped-out benchmark list (46 rows in
+// the benchmark file flagged Topped Out = Yes / Seven Point Cap = No), which would
+// have restored the full 10 points. The quality-category denominator remains 10 per
+// required measure, so the realistic ceiling is 42/60 (Harmony: 35/50).
+function capPts(d){ return d===10 ? 7 : d; }
+function flagNote(f){
+  if(f==='compl')  return '<span class="flag-warn" title="Data completeness below 75% — measure scores 0 regardless of performance rate"> 0: compl&lt;75%</span>';
+  if(f==='casemin')return '<span class="flag-warn" title="Denominator below the CMS 20-case minimum — measure cannot be scored against a benchmark"> 0: &lt;20 cases</span>';
+  if(f==='floor')  return '<span class="flag-warn" title="Performance rate below the Decile 1 floor"> 0: below D1</span>';
+  return '';
+}
+function getActiveCount(e){ return RAW.filter(r=>r.entity===e&&r.denom>0).length; }
+function getRawMax(e){ return getActiveCount(e) * 10; }   // uncapped, as CMS scores the denominator
+function getTotalPoints(e){ return RAW.filter(r=>r.entity===e).reduce((s,r)=>s+capPts(r.decile),0); }
 function getMaxDecile(e){
-  // Max possible decile = 10 per active measure (denom > 0)
-  return RAW.filter(r=>r.entity===e&&r.denom>0).length * 10;
+  // Max ACHIEVABLE points = 7 per active measure (denom > 0) under the 7-point cap
+  return getActiveCount(e) * 7;
 }
 function getThresholds(e){
-  // Scale 40/45/50 targets proportionally to the entity's active measure count
+  // Scale the 40/45/50-of-60 target bands (66.7% / 75% / 83.3%) against the CAPPED ceiling.
+  // Standard entity (6 measures): 28 / 32 / 35 of 42
+  // Harmony (5 measures):         23 / 26 / 29 of 35
   const max = getMaxDecile(e);
-  const full = 60; // 6 measures × 10
   return {
-    min:  Math.round(40 / full * max),
-    good: Math.round(45 / full * max),
-    exc:  Math.round(50 / full * max),
-    max:  max
+    min:  Math.round(0.666667 * max),
+    good: Math.round(0.750000 * max),
+    exc:  Math.round(0.833333 * max),
+    max:  max,
+    rawMax: getRawMax(e)
   };
 }
 function badgeClass(t, e){
   if(e){ const th=getThresholds(e); return t>=th.exc?'badge-excellent':t>=th.good?'badge-good':t>=th.min?'badge-warn':'badge-danger'; }
-  return t>=50?'badge-excellent':t>=45?'badge-good':t>=40?'badge-warn':'badge-danger';
+  return t>=35?'badge-excellent':t>=32?'badge-good':t>=28?'badge-warn':'badge-danger';
 }
 function badgeLabel(t, e){
   if(e){ const th=getThresholds(e); return t>=th.exc?'Excellent':t>=th.good?'Good':t>=th.min?'Acceptable':'Below Target'; }
-  return t>=50?'Excellent':t>=45?'Good':t>=40?'Acceptable':'Below Target';
+  return t>=35?'Excellent':t>=32?'Good':t>=28?'Acceptable':'Below Target';
 }
 function dClass(d){ return d===10?"d10":d>=7?"d78":d>=5?"d56":d>=3?"d34":d>=1?"d12":"d0"; }
 function bar(v,thr=75){
@@ -12551,7 +12679,7 @@ function fmtDelta(d){
 
 // ── KPIs ─────────────────────────────────────────────────────────────────────
 function renderKPIs(){
-  const totals = ENTITIES.map(e=>getTotalDecile(e));
+  const totals = ENTITIES.map(e=>getTotalPoints(e));
   const avg = (totals.reduce((a,b)=>a+b,0)/ENTITIES.length).toFixed(1);
   const meeting = totals.filter((d,i)=>d>=getThresholds(ENTITIES[i]).min).length;
   const belowPerf = RAW.filter(r=>r.perf_rate>0&&r.perf_rate<90).length;
@@ -12572,10 +12700,12 @@ function renderKPIs(){
   ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
 
   const issues=[];
-  if(meeting<ENTITIES.length) issues.push(`${ENTITIES.length-meeting} of ${ENTITIES.length} entities are below the 40-point minimum total decile threshold`);
+  if(meeting<ENTITIES.length) issues.push(`${ENTITIES.length-meeting} of ${ENTITIES.length} entities are below the 28-point minimum (capped scale, max 42 — Harmony 23 of 35)`);
   if(belowCompl>0) issues.push(`${belowCompl} entity/measure combinations have completeness rate below 75% — addressing missing documentation is the primary lever for improving decile scores`);
-  const demIssue = RAW.filter(r=>r.code==="DEM"&&r.decile===0&&r.denom>0);
-  if(demIssue.length>0) issues.push(`DEM (286) is a topped-out measure: Decile 10 requires 100% performance — current rates below 100% score Decile 0–2`);
+  const zeroCompl = RAW.filter(r=>r.flag==='compl');
+  if(zeroCompl.length>0) issues.push(`${zeroCompl.length} measure(s) score 0 on data completeness alone: ${zeroCompl.map(r=>r.entity.replace('M Medical','M Med')+' '+r.code).join(', ')}`);
+  const caseMin = RAW.filter(r=>r.flag==='casemin');
+  if(caseMin.length>0) issues.push(`${caseMin.map(r=>r.entity.replace('M Medical','M Med')+' '+r.code+' (n='+r.denom+')').join(', ')} below the CMS 20-case minimum — not scoreable`);
   document.getElementById('alertText').textContent = issues.join('  ·  ');
 }
 
@@ -12583,7 +12713,8 @@ function renderKPIs(){
 function renderScorecards(){
   document.getElementById('entityGrid').innerHTML = ENTITIES.map(entity=>{
     const rows = RAW.filter(r=>r.entity===entity);
-    const total = rows.reduce((s,r)=>s+r.decile,0);
+    const rawTotal = rows.reduce((s,r)=>s+r.decile,0);
+    const total = rows.reduce((s,r)=>s+capPts(r.decile),0);
     const tin = rows[0].tin;
     const rowsHtml = rows.map(r=>{
       const isNA = r.denom===0;
@@ -12595,7 +12726,8 @@ function renderScorecards(){
         <td>${r.denom.toLocaleString()}</td>
         <td>${fmtRate(r.perf_rate,r.denom)}${bar(r.perf_rate)} ${perfFlag}</td>
         <td>${fmtRate(r.compl_rate,r.denom)}${bar(r.compl_rate)} ${complFlag}</td>
-        <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span> ${dFlag}</td>
+        <td><span class="d-pill ${dClass(r.decile)}">${r.decile}</span> ${dFlag}${flagNote(r.flag)}</td>
+        <td style="text-align:center;font-weight:700;color:${isNA?'var(--text2)':r.decile===10?'#2d8a5e':'var(--charcoal,#333)'}">${isNA?'—':capPts(r.decile)}${r.decile===10?'<span style="font-size:9px;color:var(--text2);font-weight:400"> cap</span>':''}</td>
       </tr>`;
     }).join('');
     return `<div class="entity-card">
@@ -12604,10 +12736,11 @@ function renderScorecards(){
         <div class="total-badge ${badgeClass(total,entity)}">
           <div><span class="badge-num">${total}</span><span class="badge-denom">/${getThresholds(entity).max}</span></div>
           <div class="badge-label">${badgeLabel(total,entity)}</div>
+          <div style="font-size:9px;opacity:.75;margin-top:2px;font-weight:500" title="CMS divides points earned by 10 per required measure. Quality is weighted at 30% of the Composite Performance Score.">${total}/${getThresholds(entity).rawMax} = ${(100*total/getThresholds(entity).rawMax).toFixed(1)}% quality · ${(0.30*100*total/getThresholds(entity).rawMax*0.30/0.30).toFixed(1)} of 30 CPS pts</div>
         </div>
       </div>
       <table class="measure-table">
-        <thead><tr><th>Measure</th><th>Denom</th><th>Perf Rate</th><th>Compl Rate</th><th>Decile</th></tr></thead>
+        <thead><tr><th>Measure</th><th>Denom</th><th>Perf Rate</th><th>Compl Rate</th><th>Decile</th><th>Points</th></tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>
     </div>`;
@@ -12627,7 +12760,7 @@ const CHART_DEFAULTS = {
 };
 
 function renderOverviewCharts(){
-  const totals = ENTITIES.map(e=>getTotalDecile(e));
+  const totals = ENTITIES.map(e=>getTotalPoints(e));
   const shortNames = ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
 
   dc('decileBar');
@@ -12636,13 +12769,13 @@ function renderOverviewCharts(){
     data:{
       labels:shortNames,
       datasets:[
-        {label:'Total Decile Score',data:totals,backgroundColor:totals.map((t,i)=>{const th=getThresholds(ENTITIES[i]);return t>=th.exc?'#2d8a5e':t>=th.good?'#4ca9a0':t>=th.min?'#e6b75a':'#b83232';}),borderRadius:6,borderSkipped:false},
+        {label:'Total Points (7-pt cap)',data:totals,backgroundColor:totals.map((t,i)=>{const th=getThresholds(ENTITIES[i]);return t>=th.exc?'#2d8a5e':t>=th.good?'#4ca9a0':t>=th.min?'#e6b75a':'#b83232';}),borderRadius:6,borderSkipped:false},
         {label:'Min Target',data:ENTITIES.map(e=>getThresholds(e).min),type:'line',borderColor:'#b83232',borderDash:[5,4],borderWidth:2,pointRadius:3,fill:false},
         {label:'Good',data:ENTITIES.map(e=>getThresholds(e).good),type:'line',borderColor:'#e6b75a',borderDash:[3,3],borderWidth:1.5,pointRadius:3,fill:false},
         {label:'Excellent',data:ENTITIES.map(e=>getThresholds(e).exc),type:'line',borderColor:'#2d8a5e',borderDash:[3,3],borderWidth:1.5,pointRadius:3,fill:false},
       ]
     },
-    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:65,title:{display:true,text:'Total Decile (max 60)',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
+    options:{...CHART_DEFAULTS,responsive:true,scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,min:0,max:45,title:{display:true,text:'Total Points — 7-pt cap (max 42)',font:{family:'Montserrat',size:11},color:CHARCOAL}}}}
   });
 
   dc('perf');
@@ -12721,9 +12854,9 @@ function renderOverviewCharts(){
   const tfoot = document.getElementById('overviewGroupFoot');
   const totD = RAW_GROUP.reduce((s,r)=>s+r.denom,0);
   const totM = RAW_GROUP.reduce((s,r)=>s+r.missing,0);
-  const totDec = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
+  const totDec = RAW_GROUP.reduce((s,r)=>s+capPts(r.decile),0);
   const entityTotRow = ENTITIES.map(e=>{
-    const t = getTotalDecile(e);
+    const t = getTotalPoints(e);
     const th = getThresholds(e);
     return `<td style="text-align:center"><span class="d-pill ${badgeClass(t,e)==='badge-excellent'?'d10':badgeClass(t,e)==='badge-good'?'d78':badgeClass(t,e)==='badge-warn'?'d34':'d0'}" style="font-size:10px;padding:1px 5px">${t}/${th.max}</span></td>`;
   }).join('');
@@ -12734,7 +12867,7 @@ function renderOverviewCharts(){
     <td>—</td>
     <td>—</td>
     ${entityTotRow}
-    <td style="text-align:center"><span class="d-pill ${dClass(totDec)}" style="font-weight:800">${totDec}/60</span></td>
+    <td style="text-align:center"><span class="d-pill ${dClass(totDec)}" style="font-weight:800">${totDec}/42</span></td>
   </tr>`;
 }
 
@@ -12744,8 +12877,10 @@ function renderBenchmarks(){
     <tr>
       <td>${b.name}</td>
       <td><span class="m-code">${b.code}</span></td>
-      <td style="text-align:center">${b.topped?'<span class="flag-warn">Yes – 7pt Cap</span>':'No'}</td>
+      <td style="text-align:center">${b.topped?'<span class="flag-warn">Yes</span>':'No'}</td>
+      <td style="text-align:center">${b.cap?'<span class="flag-warn">Yes</span>':'<span class="flag-ok">No</span>'}</td>
       <td>${b.d1}</td><td>${b.d2}</td><td>${b.d3}</td><td>${b.d4}</td><td>${b.d5}</td><td>${b.d6}</td><td><strong>${b.d10}</strong></td>
+      <td style="text-align:center;font-weight:800;color:${b.cap?'#b83232':'#2d8a5e'}">${b.cap?'7':'10'}<span style="font-size:9px;color:var(--text2);font-weight:400">${b.cap?' (of 10)':''}</span></td>
     </tr>`).join('');
 
   const shortNames = ENTITIES.map(e=>e.replace(' Inc','').replace(' LLC','').replace(' PLLC','').replace('M Medical','M Med'));
@@ -12837,14 +12972,15 @@ function renderCompare(){
 function renderGroup(){
   // KPIs
   const totalMissing = RAW_GROUP.reduce((s,r)=>s+r.missing,0);
-  const groupDecileTotal = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
+  const groupDecileTotal = RAW_GROUP.reduce((s,r)=>s+capPts(r.decile),0);
+  const groupRawTotal = RAW_GROUP.reduce((s,r)=>s+r.decile,0);
   const belowCompl = RAW_GROUP.filter(r=>r.compl_rate>0&&r.compl_rate<75).length;
-  const entityTotals = ENTITIES.map(e=>getTotalDecile(e));
+  const entityTotals = ENTITIES.map(e=>getTotalPoints(e));
   const meetingTarget = entityTotals.filter((t,i)=>t>=getThresholds(ENTITIES[i]).min).length;
 
   document.getElementById('groupKpiRow').innerHTML = [
-    {label:'Group Total Decile (Max Possible)',val:groupDecileTotal+'/60',sub:'Sum of highest decile per measure across entities',cls:'kpi-teal',vc:'cv-teal'},
-    {label:'Entities Meeting Min Target (≥40)',val:`${meetingTarget}/${ENTITIES.length}`,sub:'Individual entity threshold',cls:meetingTarget===ENTITIES.length?'kpi-green':'kpi-red',vc:meetingTarget===ENTITIES.length?'cv-green':'cv-red'},
+    {label:'Group Total Points (7-pt cap)',val:groupDecileTotal+'/42',sub:`Capped points · uncapped deciles would read ${groupRawTotal}/60`,cls:'kpi-teal',vc:'cv-teal'},
+    {label:'Entities Meeting Min Target (≥28)',val:`${meetingTarget}/${ENTITIES.length}`,sub:'Capped scale — Harmony threshold is 23 of 35',cls:meetingTarget===ENTITIES.length?'kpi-green':'kpi-red',vc:meetingTarget===ENTITIES.length?'cv-green':'cv-red'},
     {label:'Total Missing Documentation',val:totalMissing.toLocaleString(),sub:'Across all entities & measures',cls:'kpi-yellow',vc:'cv-yellow'},
     {label:'Measures Below Compl. Threshold',val:belowCompl,sub:'Group completeness rate <75%',cls:belowCompl===0?'kpi-green':'kpi-red',vc:belowCompl===0?'cv-green':'cv-red'},
   ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
@@ -12894,7 +13030,7 @@ function renderGroup(){
   const ebdy = document.getElementById('groupEntityBody');
   ebdy.innerHTML = ENTITIES.map(e=>{
     const rows = MEASURES.map(m=>RAW.find(r=>r.entity===e&&r.code===m)||{decile:0});
-    const total = rows.reduce((s,r)=>s+r.decile,0);
+    const total = rows.reduce((s,r)=>s+capPts(r.decile),0);
     const bclass = badgeClass(total,e);
     const blabel = badgeLabel(total,e);
     return `<tr>
@@ -13159,6 +13295,127 @@ function renderProviders(){
 }
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+
+// ── MONTHLY GOALS ─────────────────────────────────────────────────────────────
+const GOAL_BASELINE_DATE = 'August 19, 2026';
+const YIELD = 0.70;   // assumed share of reviewed cases that are actually resolvable
+function buildWorkQueue(){
+  const out=[];
+  RAW.forEach(r=>{
+    if(r.denom===0) return;
+    if(r.denom<20){ out.push({e:r.entity,c:r.code,blocked:true,complCases:0,nmCases:0,cases:0,from:0,to:0,gain:0}); return; }
+    const gain = 7 - capPts(r.decile);
+    if(gain<=0) return;
+    const allowed = r.denom - Math.ceil(r.denom*0.75);
+    const complCases = r.compl_rate<75 ? Math.max(0,r.missing-allowed) : 0;
+    const nmCases = r.perf_not_met;
+    const cases = complCases+nmCases;
+    if(cases<=0) return;
+    out.push({e:r.entity,c:r.code,blocked:false,complCases,nmCases,cases,
+              from:capPts(r.decile),to:7,gain,eff:100*gain/cases});
+  });
+  return out.filter(x=>!x.blocked).sort((a,b)=>b.eff-a.eff);
+}
+const TIER_LIMITS=[[20,'Tier 1'],[50,'Tier 2'],[250,'Tier 3'],[Infinity,'Tier 4']];
+function tierOf(cases){ for(const [lim,name] of TIER_LIMITS) if(cases<=lim) return name; return 'Tier 4'; }
+function goalsTiers(){
+  const q=buildWorkQueue(), t={};
+  TIER_LIMITS.forEach(([l,n])=>t[n]={name:n,items:[],cases:0,pts:0});
+  q.forEach(i=>{ const n=tierOf(i.cases); t[n].items.push(i); t[n].cases+=i.cases; t[n].pts+=i.gain; });
+  return TIER_LIMITS.map(([l,n])=>t[n]).filter(x=>x.items.length);
+}
+function renderGoals(){
+  const q=buildWorkQueue(), tiers=goalsTiers();
+  const totCases=q.reduce((s,i)=>s+i.cases,0), totPts=q.reduce((s,i)=>s+i.gain,0);
+  const t1=tiers[0]||{cases:0,pts:0};
+  const blocked=RAW.filter(r=>r.denom>0&&r.denom<20);
+  const complFail=RAW.filter(r=>r.flag==='compl');
+
+  document.getElementById('goalsKpiRow').innerHTML=[
+    {label:'Tier 1 — Immediate',val:t1.cases+' cases',sub:`Worth +${t1.pts} points · the September target`,cls:'kpi-green',vc:'cv-green'},
+    {label:'Total Points Available',val:'+'+totPts,sub:`Across ${q.length} entity/measure combinations`,cls:'kpi-teal',vc:'cv-teal'},
+    {label:'Total Cases to Ceiling',val:totCases.toLocaleString(),sub:'All tiers, if every case resolves',cls:'kpi-yellow',vc:'cv-yellow'},
+    {label:'Blocked / At-Risk',val:(blocked.length+complFail.length),sub:`${complFail.length} below 75% completeness · ${blocked.length} below 20-case minimum`,cls:'kpi-red',vc:'cv-red'},
+  ].map(k=>`<div class="kpi ${k.cls}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.vc}">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  const windows={'Tier 1':'September','Tier 2':'October','Tier 3':'November','Tier 4':'December – March (clinical program)'};
+  const best=tiers.length?100*tiers[0].pts/tiers[0].cases:1;
+  document.getElementById('goalsTierBody').innerHTML=tiers.map(t=>{
+    const eff=100*t.pts/t.cases;
+    return `<tr>
+      <td style="font-weight:700;color:var(--teal-dark)">${t.name}</td>
+      <td>${windows[t.name]}</td>
+      <td style="text-align:center">${t.items.length}</td>
+      <td style="text-align:center;font-weight:700">${t.cases.toLocaleString()}</td>
+      <td style="text-align:center;font-weight:800;color:#2d8a5e">+${t.pts}</td>
+      <td style="text-align:center;font-weight:700">${eff.toFixed(1)}</td>
+      <td style="text-align:center">${bar(Math.min(100,100*eff/best))} ${(eff/best).toFixed(2)}×</td>
+    </tr>`;}).join('');
+
+  // Month-by-month
+  let cumCases=0, cumPts=0;
+  const months=[
+    {m:'September 2026',t:'Tier 1',focus:'Perf-not-met sweep on the 13 smallest gaps. Stand up forward-flow capture at point of care. Confirm exception-conversion yield.',fl:'Hold — monitor VAIM & SE FALL weekly'},
+    {m:'October 2026',t:'Tier 2',focus:'Tier 2 sweeps. Begin FALL completeness backlog at VAIM and SE. Go/no-go on DPS eCQM collection type.',fl:'VAIM & SE FALL ≥ 75%'},
+    {m:'November 2026',t:'Tier 3',focus:'Tier 3 volume work. Verify DPS clinical workflow changes are landing in the data, not just in policy.',fl:'All measures ≥ 80%'},
+    {m:'December 2026',t:'Tier 4',focus:'Final clinical closure. Anything needing a 2026 encounter must happen before Dec 31 — this is the hard stop.',fl:'All measures ≥ 85%'},
+    {m:'Jan – Mar 2027',t:null,focus:'Abstraction and recoding only. No new clinical action is possible. Submission QA; lock by March 15.',fl:'All measures ≥ 90% at submission'},
+  ];
+  const tmap={}; tiers.forEach(t=>tmap[t.name]=t);
+  document.getElementById('goalsMonthBody').innerHTML=months.map(mo=>{
+    if(mo.t&&tmap[mo.t]){ cumCases+=tmap[mo.t].cases; cumPts+=tmap[mo.t].pts; }
+    return `<tr>
+      <td style="font-weight:700;color:var(--teal-dark)">${mo.m}</td>
+      <td style="font-size:11px;line-height:1.5">${mo.focus}</td>
+      <td style="text-align:center;font-weight:700">${cumCases.toLocaleString()}</td>
+      <td style="text-align:center">${Math.round(cumCases*YIELD).toLocaleString()}</td>
+      <td style="text-align:center;font-weight:800;color:#2d8a5e">+${cumPts}</td>
+      <td style="text-align:center;font-size:11px">${mo.fl}</td>
+    </tr>`;}).join('');
+
+  // Trajectory
+  const maxOf=e=>RAW.filter(r=>r.entity===e&&r.denom>0).length*7;
+  const ceilOf=e=>RAW.filter(r=>r.entity===e&&r.denom>=20).length*7;
+  const shortE=e=>e.replace('M Medical','M Med').replace('Virginia Internal Medicine','VAIM').replace(' Inc','').replace(' PLLC','').replace(' LLC','');
+  document.getElementById('goalsTrajHead').innerHTML='<th style="text-align:left">Milestone</th>'+ENTITIES.map(e=>`<th>${shortE(e)}</th>`).join('');
+  let done=[];
+  const rowsHtml=[['Baseline · Aug 19',null],...tiers.map(t=>['After '+t.name,t])].map(([lab,t])=>{
+    if(t) done=done.concat(t.items);
+    return `<tr><td style="font-weight:600;color:var(--teal-dark)">${lab}</td>`+ENTITIES.map(e=>{
+      const base=RAW.filter(r=>r.entity===e).reduce((s,r)=>s+capPts(r.decile),0);
+      const add=done.filter(x=>x.e===e).reduce((s,x)=>s+x.gain,0);
+      const v=base+add, mx=maxOf(e), th=getThresholds(e);
+      const cls=v>=th.exc?'d10':v>=th.good?'d78':v>=th.min?'d56':'d0';
+      return `<td style="text-align:center"><span class="d-pill ${cls}">${v}/${mx}</span></td>`;
+    }).join('')+'</tr>';}).join('');
+  document.getElementById('goalsTrajBody').innerHTML=rowsHtml+
+    `<tr style="border-top:2px solid var(--gold);background:var(--papyrus)"><td style="font-weight:700">Minimum target</td>`+
+    ENTITIES.map(e=>`<td style="text-align:center;font-weight:700">${getThresholds(e).min}/${maxOf(e)}</td>`).join('')+'</tr>'+
+    `<tr style="background:var(--papyrus)"><td style="font-weight:700">Hard ceiling</td>`+
+    ENTITIES.map(e=>{const c=ceilOf(e),m=maxOf(e);
+      return `<td style="text-align:center;font-weight:700;color:${c<m?'#b83232':'inherit'}">${c}/${m}${c<m?' ⚠':''}</td>`;}).join('')+'</tr>';
+
+  renderGoalsQueue();
+}
+function renderGoalsQueue(){
+  const q=buildWorkQueue();
+  const ft=document.getElementById('goalsTier').value, fe=document.getElementById('goalsEntity').value;
+  const shortE=e=>e.replace('M Medical','M Med').replace('Virginia Internal Medicine','VAIM').replace(' Inc','').replace(' PLLC','').replace(' LLC','');
+  const rows=q.filter(i=>(!ft||tierOf(i.cases)===ft)&&(!fe||i.e===fe));
+  document.getElementById('goalsQueueBody').innerHTML=rows.map(i=>`<tr>
+    <td style="font-weight:700;color:var(--teal-dark)">${tierOf(i.cases)}</td>
+    <td>${shortE(i.e)}</td>
+    <td style="text-align:center"><span class="m-code">${i.c}</span></td>
+    <td style="text-align:center">${i.complCases?`<span class="flag-warn">${i.complCases}</span>`:'—'}</td>
+    <td style="text-align:center">${i.nmCases||'—'}</td>
+    <td style="text-align:center;font-weight:700">${i.cases.toLocaleString()}</td>
+    <td style="text-align:center"><span class="d-pill ${dClass(i.from)}">${i.from}</span></td>
+    <td style="text-align:center"><span class="d-pill d78">7</span></td>
+    <td style="text-align:center;font-weight:800;color:#2d8a5e">+${i.gain}</td>
+    <td style="text-align:center;font-weight:700">${i.eff.toFixed(1)}</td>
+  </tr>`).join('')||'<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:16px">No rows match these filters.</td></tr>';
+}
+
 function switchTab(name, btn){
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -13168,6 +13425,7 @@ function switchTab(name, btn){
   if(name === 'benchmarks')   renderBenchmarks();
   if(name === 'providers')    renderProviders();
   if(name === 'patient')      renderPatientDetail(true);
+  if(name === 'goals')        renderGoals();
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -13177,6 +13435,11 @@ function switchTab(name, btn){
 ['pdProvider','pdLocation','pdMeasure','pdFlag'].forEach(id =>
   document.getElementById(id).addEventListener('change', () => renderPatientDetail(false))
 );
+(function(){
+  const sel=document.getElementById('goalsEntity');
+  ENTITIES.forEach(e=>{const o=document.createElement('option');o.value=e;o.textContent=e;sel.appendChild(o);});
+  ['goalsTier','goalsEntity'].forEach(id=>document.getElementById(id).addEventListener('change',renderGoalsQueue));
+})();
 document.getElementById('ppRegion').addEventListener('change', () => {
   ppUpdateProviderFilter(); renderProviders();
 });
